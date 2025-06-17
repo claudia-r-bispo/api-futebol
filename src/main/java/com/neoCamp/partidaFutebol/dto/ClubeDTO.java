@@ -28,8 +28,6 @@ public class ClubeDTO {
         this.ativo = ativo;
     }
 
-//    public  void setUf(String uf) {
-//
-//    }
+
 }
 

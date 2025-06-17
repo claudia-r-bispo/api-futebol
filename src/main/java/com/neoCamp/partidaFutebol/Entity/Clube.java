@@ -46,12 +46,4 @@ public class Clube {
 
     }
 
-//    public Clube(Long id, String nome, String estado, LocalDate dtCriacao) {
-//        this.id = id;
-//        this.nome = nome;
-//        this.uf = uf;
-//        this.dtCriacao = dtCriacao;
-//    }
-
-
 }
