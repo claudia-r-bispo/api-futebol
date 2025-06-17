@@ -13,7 +13,7 @@ public class EstadioService {
 
     private final EstadioRepository estadioRepository;
 
-    @Autowired
+    //@Autowired
     public EstadioService(EstadioRepository estadioRepository) {
         this.estadioRepository = estadioRepository;
     }
@@ -24,7 +24,7 @@ public class EstadioService {
         // estadio.setUf(dto.getUf());
         // estadio.setDtCriacao(dto.getDtCriacao());
         // estadio.setAtivo(true);
-        return (Estadio) estadioRepository.save(estadio);
+        return estadioRepository.save(estadio);
     }
 
     public Estadio updateEstadio(Long id, EstadioDTO dto) {

@@ -3,15 +3,30 @@ package com.neoCamp.partidaFutebol.dto;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
-public class EstadioDTO {
+import java.time.LocalDate;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 
-    private String nome;
 
-    private String Uf;
 
-    public EstadioDTO(Long id, Object nome, Object uf, Object dtCriacao, Object ativo) {
+    @Getter
+    @Setter
+    public class EstadioDTO {
+
+        private String nome;
+        private String uf;
+
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        private LocalDate dtCriacao;
+        private Boolean ativo;
+
+        public EstadioDTO() {
+        }
+
+        public EstadioDTO(String nome, String uf, LocalDate dtCriacao, Boolean ativo) {
+            this.nome = nome;
+            this.uf = uf;
+            this.dtCriacao = dtCriacao;
+            this.ativo = ativo;
+        }
     }
-}
