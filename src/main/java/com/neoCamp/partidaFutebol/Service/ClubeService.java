@@ -41,15 +41,16 @@ public class ClubeService {
 
     public Page<Clube> listarComFiltros(String nome, String uf, Boolean ativo, Pageable pageable) {
         if (ativo != null) {
-            return clubeRepository.findByNameContainingIgnoreCaseAndUfContaingIgnoreCaseAndAtivo(
-                    nome == null ? "": nome,
+            return clubeRepository.findByNomeContainingIgnoreCaseAndUfContainingIgnoreCaseAndAtivo((
+                    nome == null ? "": nome),
                     uf == null ? "":uf,
                     ativo,
                     pageable);
         } else {
-            return clubeRepository.findByNameContainingIgnoreCaseAndUfContainingIgnoreCase(
+            return clubeRepository.findByNomeContainingIgnoreCaseAndUfContainingIgnoreCase(
                     nome == null ? " ": nome,
                     uf  == null ? "": uf,
+
                     pageable);
         }
     }

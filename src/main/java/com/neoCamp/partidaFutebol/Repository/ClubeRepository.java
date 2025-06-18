@@ -7,7 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ClubeRepository extends JpaRepository<Clube, Long> {
 
-    Page<Clube> findByNameContainingIgnoreCaseAndUfContaingIgnoreCaseAndAtivo(String nome, String uf, Boolean ativo, Pageable pageable);
+    Page<Clube> findByNomeContainingIgnoreCaseAndUfContainingIgnoreCaseAndAtivo(String nome, String uf, Boolean ativo, Pageable pageable);
 
-    Page<Clube> findByNameContainingIgnoreCaseAndUfContainingIgnoreCase(String nome, String uf, Pageable pageable);
+    Page<Clube> findByNomeContainingIgnoreCaseAndUfContainingIgnoreCase(String nome, String uf, Pageable pageable);
+
+
 }
