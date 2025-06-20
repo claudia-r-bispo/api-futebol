@@ -1,8 +1,9 @@
 package com.neoCamp.partidaFutebol.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
@@ -15,18 +16,15 @@ public class ClubeDTO {
 
     private Long Id;
     private String nome;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dtCriacao;
     private String uf;
     private boolean ativo;
-
-
-    public ClubeDTO(Long id, String nome, String uf, LocalDate dtCriacao, boolean ativo) {
-        this.Id = id;
-        this.nome = nome;
-        this.uf = uf;
-        this.dtCriacao = dtCriacao;
-        this.ativo = ativo;
-    }
+    private Long clubeMandante;
+    private Long clubeVisitante;
+    private Long clubeMandanteId;
+    private Long clubeVisitanteId;
 
 
 }

@@ -1,12 +1,10 @@
-package com.neoCamp.partidaFutebol.Entity;
+package com.neoCamp.partidaFutebol.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import jakarta.persistence.Id;
 import java.time.LocalDate;
 
@@ -14,7 +12,9 @@ import java.time.LocalDate;
 @Data
 @Getter
 @Setter
-public class Clube {
+@NoArgsConstructor
+@AllArgsConstructor
+public class ClubeEntity {
 
 
 
@@ -34,16 +34,16 @@ public class Clube {
         @Column(nullable=false)
         private boolean ativo;
 
-        public Clube(Long id, String nome, String estado, LocalDate dtCriacao, boolean ativo) {
-            this.id = id;
-            this.nome = nome;
-            this.uf = uf;
-            this.dtCriacao = dtCriacao;
-            this.ativo = ativo;
-        }
-
-    public Clube() {
+//        public ClubeEntity(Long id, String nome, String estado, LocalDate dtCriacao, boolean ativo) {
+//            this.id = id;
+//            this.nome = nome;
+//            this.uf = uf;
+//            this.dtCriacao = dtCriacao;
+//            this.ativo = ativo;
+//        }
+//
+//    public ClubeEntity() {
 
     }
 
-}
+

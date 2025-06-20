@@ -1,8 +1,8 @@
-package com.neoCamp.partidaFutebol.Controller;
+package com.neoCamp.partidaFutebol.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.neoCamp.partidaFutebol.Entity.Clube;
-import com.neoCamp.partidaFutebol.Service.ClubeService;
+import com.neoCamp.partidaFutebol.entity.ClubeEntity;
+import com.neoCamp.partidaFutebol.service.ClubeService;
 import com.neoCamp.partidaFutebol.dto.ClubeDTO;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -10,13 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 
-
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
@@ -34,14 +32,14 @@ public class ClubeControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @MockitoBean
     private ClubeService clubeService;
 
     @Autowired
     private ObjectMapper objectMapper;
 
-    private Clube getClubeStub() {
-        return new Clube(1L, "Corinthians", "SP", LocalDate.of(1910, 9, 1), true);
+    private ClubeEntity getClubeStub() {
+        return new ClubeEntity(1L, "Corinthians", "SP", LocalDate.of(1910, 9, 1), true);
     }
 
     private ClubeDTO getClubeDTOStub() {
@@ -50,7 +48,7 @@ public class ClubeControllerTest {
 
     @Test
     void testCreateClube() throws Exception {
-        Clube clube = getClubeStub();
+        ClubeEntity clube = getClubeStub();
         ClubeDTO dto = new ClubeDTO(null, "Corinthians", "SP", LocalDate.of(1910, 9, 1), true);
 
         Mockito.when(clubeService.createClube(any(ClubeDTO.class))).thenReturn(clube);
@@ -65,7 +63,7 @@ public class ClubeControllerTest {
 
     @Test
     void testUpdateClube() throws Exception {
-        Clube clube = getClubeStub();
+        ClubeEntity clube = getClubeStub();
         ClubeDTO dto = getClubeDTOStub();
 
         Mockito.when(clubeService.updateClube(eq(1L), any(ClubeDTO.class))).thenReturn(clube);
@@ -87,7 +85,7 @@ public class ClubeControllerTest {
     }
     @Test
     void testGetClubeById() throws Exception {
-        Clube clube = getClubeStub();
+        ClubeEntity clube = getClubeStub();
 
         Mockito.when(clubeService.findById(1L)).thenReturn(clube);
 
@@ -99,8 +97,8 @@ public class ClubeControllerTest {
 
     @Test
     void testListarClube() throws Exception {
-        Clube clube = getClubeStub();
-        Page<Clube> page = new PageImpl<>(Collections.singletonList(clube), PageRequest.of(0, 10), 1);
+        ClubeEntity clube = getClubeStub();
+        Page<ClubeEntity> page = new PageImpl<>(Collections.singletonList(clube), PageRequest.of(0, 10), 1);
 
         Mockito.when(clubeService.listarComFiltros(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
                 .thenReturn(page);

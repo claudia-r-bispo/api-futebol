@@ -1,18 +1,19 @@
-package com.neoCamp.partidaFutebol.Entity;
+package com.neoCamp.partidaFutebol.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import lombok.Data;
+import lombok.*;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
+
 import java.time.LocalDate;
 
 
 @Entity
 @Data
-public class Estadio {
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor
+public class EstadioEntity {
 
 
         @Id
@@ -24,24 +25,24 @@ public class Estadio {
 
 
     @Column(nullable=false, length=2)
-    private String Uf;
+    private String uf;
 
     @Column(nullable=false)
-    private boolean ativo;
+    private boolean ativo = true;
 
     @Column(nullable=false)
     private LocalDate dtCriacao;
 
-    public Estadio(Long id, String nome, String uf, LocalDate dtCriacao, boolean ativo) {
-        this.id = id;
-        this.nome = nome;
-        this.Uf =uf;
-        this.dtCriacao = dtCriacao;
-        this.ativo = ativo;
-    }
-
-    public Estadio() {
-
-    }
+//    public EstadioEntity(Long id, String nome, String uf, LocalDate dtCriacao, boolean ativo) {
+//        this.id = id;
+//        this.nome = nome;
+//        this.uf =uf;
+//        this.dtCriacao = dtCriacao;
+//        this.ativo = ativo;
+//    }
+//
+//    public EstadioEntity() {
+//
+//    }
 }
 
