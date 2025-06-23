@@ -14,18 +14,23 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class ClubeDTO {
 
-    private Long Id;
+    private Long id;
     private String nome;
-
+    private String uf;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dtCriacao;
-    private String uf;
-    private boolean ativo;
+    private Boolean ativo;
     private Long clubeMandante;
     private Long clubeVisitante;
     private Long clubeMandanteId;
     private Long clubeVisitanteId;
 
-
+    public ClubeDTO(Long id, String nome, String uf, LocalDate dtCriacao, Boolean ativo) {
+        this.id = id;
+        this.nome = nome;
+        this.uf = uf;
+        this.dtCriacao = dtCriacao;
+        this.ativo = ativo;
+    }
 }
 

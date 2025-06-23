@@ -1,7 +1,7 @@
 //package com.neoCamp.partidaFutebol.controller;
 //
-//import com.neoCamp.partidaFutebol.entity.EstadioEntity;
-//import com.neoCamp.partidaFutebol.dto.EstadioDTO;
+//import entity.com.neocamp.partidaFutebol.EstadioEntity;
+//import dto.com.neocamp.partidaFutebol.EstadioDTO;
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.Test;
 //import org.mockito.InjectMocks;

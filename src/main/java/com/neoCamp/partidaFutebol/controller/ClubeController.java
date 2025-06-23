@@ -1,6 +1,5 @@
 package com.neoCamp.partidaFutebol.controller;
 
-import com.neoCamp.partidaFutebol.entity.ClubeEntity;
 import com.neoCamp.partidaFutebol.service.ClubeService;
 import com.neoCamp.partidaFutebol.dto.ClubeDTO;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -31,7 +31,7 @@ public class PartidaEntity {
     private EstadioEntity estadio;
 
     @Column(nullable = false)
-    private LocalDateTime dataHora;
+    private LocalDateTime dataHoraPartida;
 
     @Column(nullable = false)
     private Integer golsMandante;

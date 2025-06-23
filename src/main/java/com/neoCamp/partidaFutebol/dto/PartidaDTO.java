@@ -15,10 +15,19 @@ public class PartidaDTO {
     private Long estadioId;
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-    private LocalDateTime dataPartida;
+    private LocalDateTime dataHoraPartida;
 
     private Integer golsMandante;
     private Integer golsVisitante;
 
+public PartidaDTO(Long id, Long clubeMandanteId, Long clubeVisitanteId, Long estadioId, LocalDateTime dataPartida, Integer golsMandante, Integer golsVisitante) {
+        this.id = id;
+        this.clubeMandanteId = clubeMandanteId;
+        this.clubeVisitanteId = clubeVisitanteId;
+        this.estadioId = estadioId;
+        this.dataHoraPartida = dataHoraPartida;
+        this.golsMandante = golsMandante;
+        this.golsVisitante = golsVisitante;
+    }
 
 }

@@ -2,36 +2,33 @@ package com.neoCamp.partidaFutebol.mapper;
 
 import com.neoCamp.partidaFutebol.dto.PartidaDTO;
 import com.neoCamp.partidaFutebol.entity.PartidaEntity;
-import org.springframework.data.support.PersistableIsNewStrategy;
+import com.neoCamp.partidaFutebol.entity.ClubeEntity;
+import com.neoCamp.partidaFutebol.entity.EstadioEntity;
 
 public class PartidaMapper {
-    public static PartidaEntity mapToDTO(PartidaEntity partidaEntity) {
-        if (partidaEntity == null) {
+    public static PartidaDTO toDTO(PartidaEntity partidaEntity) {
+        if (partidaEntity == null) return null;
             return new PartidaDTO(
-                    partida.getId(),
-                    partida.getClubeMandante().getId(),
-                    partida.getClubeVisitante().getId(),
-                    partida.getEstadio().getId(),
-                    partida.getDataHora(),
-                    partida.getGolsMandante(),
-                    partida.getGolsVisitante());
+                    partidaEntity.getId(),
+                    partidaEntity.getClubeMandante() != null ? partidaEntity.getClubeMandante().getId() : null,
+                    partidaEntity.getClubeVisitante() != null ? partidaEntity.getClubeVisitante().getId() : null,
+                    partidaEntity.getEstadio() != null ? partidaEntity.getEstadio().getId() : null,
+                    partidaEntity.getDataHoraPartida(),
+                    partidaEntity.getGolsMandante(),
+                    partidaEntity.getGolsVisitante()
+            );
         }
-        public static PartidaEntity toEntity (
-                PartidaDTO dto,
-                ClubeEntity mandante,
-                ClubeEntity visitante,
-                EstadioEntity estadio){
-            {
-                if (dto == null) return null;
-                PartidaEntity partidaEntity = new PartidaEntity();
-                partidaEntity.setId(dto.getId());
-                partidaEntity.setClubeMandante(mandante);
-                partidaEntity.setClubeVisitante(visitante);
-                partidaEntity.setEstadio(estadio);
-                partidaEntity.setDataHora(dto.getDataHora());
-                partidaEntity.setGolsMandante(dto.getGolsMandante());
-                partidaEntity.setGolsVisitante(dto.getGolsVisitante());
-                return partidaEntity;
+        public static PartidaEntity toEntity(PartidaDTO dto, ClubeEntity mandante, ClubeEntity visitante, EstadioEntity estadio) {
+            if (dto == null) return null;
+
+            PartidaEntity entity = new PartidaEntity();
+            entity.setId(dto.getId());
+            entity.setClubeMandante(mandante);
+            entity.setClubeVisitante(visitante);
+            entity.setEstadio(estadio);
+            entity.setDataHoraPartida(dto.getDataHoraPartida());
+            entity.setGolsMandante(dto.getGolsMandante());
+            entity.setGolsVisitante(dto.getGolsVisitante());
+                return entity;
             }
         }
-    }}

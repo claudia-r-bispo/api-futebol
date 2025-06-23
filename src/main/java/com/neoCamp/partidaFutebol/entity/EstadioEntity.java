@@ -24,25 +24,19 @@ public class EstadioEntity {
         private String nome;
 
 
-    @Column(nullable=false, length=2)
-    private String uf;
+        @Column(nullable=false, length=2)
+        private String uf;
 
-    @Column(nullable=false)
-    private boolean ativo = true;
+        @Column(nullable=false)
+        private boolean ativo = true;
 
-    @Column(nullable=false)
-    private LocalDate dtCriacao;
+        @Column(nullable=false)
+        private LocalDate dtCriacao;
 
-//    public EstadioEntity(Long id, String nome, String uf, LocalDate dtCriacao, boolean ativo) {
-//        this.id = id;
-//        this.nome = nome;
-//        this.uf =uf;
-//        this.dtCriacao = dtCriacao;
-//        this.ativo = ativo;
-//    }
-//
-//    public EstadioEntity() {
-//
-//    }
+
+
+
+
+
 }
 

@@ -17,14 +17,14 @@ public class EstadioService {
         this.estadioRepository = estadioRepository;
     }
 
-    public EstadioEntity createEstadio(EstadioDTO dto) {
+    public EstadioDTO createEstadio(EstadioDTO dto) {
         EstadioEntity entity = EstadioMapper.toEntity(dto);
         entity.setAtivo(true);
         EstadioEntity saved = estadioRepository.save(entity);
         return EstadioMapper.toDto(saved);
     }
 
-    public EstadioEntity updateEstadio(Long id, EstadioDTO dto) {
+    public EstadioDTO updateEstadio(Long id, EstadioDTO dto) {
         EstadioEntity entity = estadioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Estádio não encontrado com o ID: " + id));
         entity.setNome(dto.getNome());
@@ -35,14 +35,14 @@ public class EstadioService {
         return EstadioMapper.toDto(saved);
     }
 
-    public EstadioEntity findById(Long id) {
-        return estadioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Estádio não encontrado!"));
+    public EstadioDTO findById(Long id) {
+        EstadioEntity entity = estadioRepository.findById(id)
+        return estadioRepository.findById(id).orElseThrow(() -> new RuntimeException("Estádio não encontrado!"));
         return EstadioMapper.toDto(entity);
     }
 
-    public Page<EstadioEntity> listar(Pageable pageable) {
-        return estadioRepository.findAll(pageable);
+    public Page<EstadioDTO> listar(Pageable pageable) {
+        return estadioRepository.findAll(pageable).map(EstadioMapper::toDto);
     }
 }
 

@@ -9,8 +9,6 @@ import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 
-
-
     @Getter
     @Setter
     @NoArgsConstructor @AllArgsConstructor
@@ -19,7 +17,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
         private Long id;
         private String nome;
         private String uf;
-
         @JsonFormat(pattern = "yyyy-MM-dd")
         private LocalDate dtCriacao;
         private Boolean ativo;
@@ -29,15 +26,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
         private Integer golsVisitante;
 
 
-
-
-//        public EstadioDTO() {
-//        }
-//
-//        public EstadioDTO(String nome, String uf, LocalDate dtCriacao, Boolean ativo) {
-//            this.nome = nome;
-//            this.uf = uf;
-//            this.dtCriacao = dtCriacao;
-//            this.ativo = ativo;
-//        }
+        public boolean isAtivo() {
+            return ativo;
+        }
     }
+
+
