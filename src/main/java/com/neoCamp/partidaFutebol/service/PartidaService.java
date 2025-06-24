@@ -5,6 +5,8 @@ import com.neoCamp.partidaFutebol.dto.PartidaDTO;
 import com.neoCamp.partidaFutebol.entity.ClubeEntity;
 import com.neoCamp.partidaFutebol.entity.EstadioEntity;
 import com.neoCamp.partidaFutebol.entity.PartidaEntity;
+import com.neoCamp.partidaFutebol.mapper.PartidaMapper;
+import com.neoCamp.partidaFutebol.repository.EstadioRepository;
 import com.neoCamp.partidaFutebol.repository.PartidaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,6 +24,8 @@ public class PartidaService {
 
     @Autowired
     private EstadioService estadioService;
+    @Autowired
+    private EstadioRepository estadioRepository;
 
     public PartidaDTO createPartida(PartidaDTO dto) {
         ClubeEntity mandante = clubeService.findEntityById(dto.getClubeMandanteId());
@@ -41,7 +45,7 @@ public class PartidaService {
         entity.setClubeMandante(mandante);
         entity.setClubeVisitante(visitante);
         entity.setEstadio(estadio);
-        entity.setDataHora(dto.getDataHora());
+        entity.setDataHoraPartida(dto.getDataHoraPartida());
         entity.setGolsMandante(dto.getGolsMandante());
         entity.setGolsVisitante(dto.getGolsVisitante());
         PartidaEntity saved = partidaRepository.save(entity);
@@ -53,17 +57,19 @@ public class PartidaService {
     }
 
     public PartidaDTO findById(Long id) {
-        PartidaEntity entity = partidaRepository.findById(id)
+        return partidaRepository.findById(id)
+                .map(PartidaMapper::toDto)
                 .orElseThrow(() -> new RuntimeException("Partida não encontrada!"));
-        return PartidaMapper.toDto(entity);
-    }
-
-    public Page<PartidaDTO> listar(Pageable pageable) {
-        return partidaRepository.findAll(pageable).map(PartidaMapper::toDto);
     }
 
     public PartidaEntity findEntityById(Long id) {
         return partidaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Partida não encontrada!"));
     }
+
+    public Page<PartidaDTO> listar(Pageable pageable) {
+        return partidaRepository.findAll(pageable).map(PartidaMapper::toDto);
+    }
+
+
 }

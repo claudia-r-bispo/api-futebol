@@ -30,7 +30,11 @@ public class EstadioMapper {
         estadioDTO.setAtivo(estadioEntity.isAtivo());
         return estadioDTO;
     }
+
+    public static EstadioDTO toDto(EstadioEntity saved) {
+        return toDTO(saved);
     }
+}
 
 
 

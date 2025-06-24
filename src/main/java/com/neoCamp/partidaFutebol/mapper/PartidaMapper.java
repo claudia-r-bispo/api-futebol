@@ -31,4 +31,17 @@ public class PartidaMapper {
             entity.setGolsVisitante(dto.getGolsVisitante());
                 return entity;
             }
-        }
+
+    public static PartidaDTO toDto(PartidaEntity saved) {
+        if (saved == null) return null;
+        return new PartidaDTO(
+                saved.getId(),
+                saved.getClubeMandante() != null ? saved.getClubeMandante().getId() : null,
+                saved.getClubeVisitante() != null ? saved.getClubeVisitante().getId() : null,
+                saved.getEstadio() != null ? saved.getEstadio().getId() : null,
+                saved.getDataHoraPartida(),
+                saved.getGolsMandante(),
+                saved.getGolsVisitante()
+        );
+    }
+}

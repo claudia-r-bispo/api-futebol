@@ -17,22 +17,23 @@ public class ClubeService {
     private ClubeRepository clubeRepository;
 
     public ClubeDTO createClube(ClubeDTO dto) {
-        ClubeEntity clube = ClubeMapper.toEntity(dto);
-        clube.setAtivo(true);
-        ClubeEntity savedClube = clubeRepository.save(clube);
+        ClubeEntity entity = ClubeMapper.toEntity(dto);
+        ClubeEntity savedClube = clubeRepository.save(entity);
         return ClubeMapper.toDto(savedClube);
 
     }
 
-    public ClubeEntity updateClube(Long id, ClubeDTO dto) {
+    public ClubeDTO updateClube(Long id, ClubeDTO dto) {
         ClubeEntity clube = clubeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Clube não encontrado com o ID: " + id));
         clube.setNome(dto.getNome());
         clube.setUf(dto.getUf());
         clube.setDtCriacao(dto.getDtCriacao());
         clube.setAtivo(dto.isAtivo());
-        return clubeRepository.save(clube);
+        ClubeEntity saved = clubeRepository.save(clube);
+        return ClubeMapper.toDto(saved); // agora retorna um DTO
     }
+
 
     public void inativar(Long idClube) {
         ClubeEntity clube = clubeRepository.findById(idClube)
@@ -41,10 +42,17 @@ public class ClubeService {
         clubeRepository.save(clube);
     }
 
+    public ClubeDTO findById(Long id) {
+        ClubeEntity entity = clubeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Clube não encontrado"));
+        return ClubeMapper.toDto(entity);
+    }
+
     public ClubeEntity findEntityById(Long id) {
         return clubeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Clube não encontrado"));
     }
+
 
     public Page<ClubeDTO> listarComFiltros(String nome, String uf, Boolean ativo, Pageable pageable) {
         if (ativo != null) {
@@ -58,5 +66,5 @@ public class ClubeService {
         }
 
 
-    }
-}
+        return clubeRepository.findAll(pageable).map(ClubeMapper::toDto);
+}}

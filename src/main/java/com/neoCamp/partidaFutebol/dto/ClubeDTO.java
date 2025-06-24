@@ -32,5 +32,9 @@ public class ClubeDTO {
         this.dtCriacao = dtCriacao;
         this.ativo = ativo;
     }
+
+    public boolean isAtivo() {
+        return ativo != null && ativo;
+    }
 }
 

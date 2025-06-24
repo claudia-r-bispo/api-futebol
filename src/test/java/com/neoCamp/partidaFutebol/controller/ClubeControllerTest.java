@@ -87,7 +87,7 @@ public class ClubeControllerTest {
     void testGetClubeById() throws Exception {
         ClubeEntity clube = getClubeStub();
 
-        Mockito.when(clubeService.findById(1L)).thenReturn(clube);
+        Mockito.when(clubeService.findEntityById(1L)).thenReturn(clube);
 
         mockMvc.perform(get("/api/clubes/1"))
                 .andExpect(status().isOk())

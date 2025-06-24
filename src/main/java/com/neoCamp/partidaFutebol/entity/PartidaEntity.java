@@ -1,14 +1,17 @@
 package com.neoCamp.partidaFutebol.entity;
 
 import jakarta.persistence.*;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
 
+@Entity
 @Getter  @Setter @NoArgsConstructor @AllArgsConstructor
 @Table(name = "partida")
 public class PartidaEntity {

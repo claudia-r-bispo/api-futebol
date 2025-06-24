@@ -36,9 +36,15 @@ public class EstadioService {
     }
 
     public EstadioDTO findById(Long id) {
-        EstadioEntity entity = estadioRepository.findById(id)
-        return estadioRepository.findById(id).orElseThrow(() -> new RuntimeException("Estádio não encontrado!"));
-        return EstadioMapper.toDto(entity);
+        return estadioRepository.findById(id)
+                .map(EstadioMapper::toDto)
+                .orElseThrow(() -> new RuntimeException("Estádio não encontrado!"));
+
+    }
+
+    public EstadioEntity findEntityById(Long id) {
+        return estadioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Estádio não encontrado!"));
     }
 
     public Page<EstadioDTO> listar(Pageable pageable) {

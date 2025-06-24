@@ -20,7 +20,7 @@ public class PartidaDTO {
     private Integer golsMandante;
     private Integer golsVisitante;
 
-public PartidaDTO(Long id, Long clubeMandanteId, Long clubeVisitanteId, Long estadioId, LocalDateTime dataPartida, Integer golsMandante, Integer golsVisitante) {
+public PartidaDTO(Long id, Long clubeMandanteId, Long clubeVisitanteId, Long estadioId, LocalDateTime dataHoraPartida, Integer golsMandante, Integer golsVisitante) {
         this.id = id;
         this.clubeMandanteId = clubeMandanteId;
         this.clubeVisitanteId = clubeVisitanteId;
