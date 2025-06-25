@@ -9,49 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/estadios")
-//public class EstadioController  {
-//
-//    private final EstadioService estadioService;
-//
-//
-//    public EstadioController(EstadioService estadioService) {
-//        this.estadioService = estadioService;
-//    }
-//
-//    @PostMapping
-//    public ResponseEntity<EstadioEntity> createEstadio(@RequestBody @Valid EstadioDTO dto) {
-//        EstadioEntity estadio = new EstadioEntity();
-//        estadio.setNome(dto.getNome());
-//         estadio.setUf(dto.getUf());
-//         estadio.setDtCriacao(dto.getDtCriacao());
-//         estadio.setAtivo(true);
-//        return ResponseEntity.ok(estadioService.save(estadio));
-//    }
-//
-//    @PutMapping("/{id}")
-//    public ResponseEntity<EstadioEntity> updateEstadio(@PathVariable Long id, @RequestBody @Valid EstadioDTO dto) {
-//        EstadioEntity estadio = estadioService.findById(id)
-//                .orElseThrow(() -> new RuntimeException("Estádio não encontrado com o ID: " + id));
-//        estadio.setNome(dto.getNome());
-//        // estadio.setUf(dto.getUf());
-//        // estadio.setDtCriacao(dto.getDtCriacao());
-//        // estadio.setAtivo(dto.isAtivo());
-//        return ResponseEntity.ok(estadioService.save(estadio));
-//    }
-//
-//    @GetMapping("/{id}")
-//    public ResponseEntity<EstadioEntity> findById(@PathVariable Long id) {
-//        EstadioEntity estadio = estadioService.findById(id)
-//                .orElseThrow(() -> new RuntimeException("Estádio não encontrado!"));
-//        return ResponseEntity.ok(estadio);
-//    }
-//
-//    public Page<EstadioEntity> listar(Pageable pageable) {
-//        return estadioService.findAll(pageable);
-//    }
-//}
-
-
 
 public class EstadioController {
 
