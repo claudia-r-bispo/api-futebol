@@ -1,4 +1,7 @@
-package com.neoCamp.partidaFutebol;
+package com.neoCamp.partidaFutebol.enums;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum Uf {
     AC("Acre"),
@@ -38,11 +41,13 @@ public enum Uf {
     public String getNome() {
         return nome;
     }
+
+    @JsonValue
     public String getSigla() {
         return this.name();
     }
 
-
+    @JsonCreator
     public static Uf fromSigla(String sigla) {
         for (Uf uf : Uf.values()) {
             if (uf.name().equalsIgnoreCase(sigla)) {
