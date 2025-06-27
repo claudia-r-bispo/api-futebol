@@ -7,7 +7,11 @@ public class ClubeMapper {
 
     public static ClubeDTO toDto(ClubeEntity entity) {
         if (entity == null) return null;
-        return new ClubeDTO(entity.getId(), entity.getNome(), entity.getUf(), entity.getDtCriacao(), entity.isAtivo());
+        return new ClubeDTO(entity.getId(),
+                entity.getNome(),
+                entity.getUf(),
+                entity.getDtCriacao(),
+                entity.isAtivo());
     }
     public static ClubeEntity toEntity(ClubeDTO dto) {
         if (dto == null) return null;
