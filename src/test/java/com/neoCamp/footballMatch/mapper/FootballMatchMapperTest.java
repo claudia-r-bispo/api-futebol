@@ -4,6 +4,7 @@ import com.neoCamp.footballMatch.dto.FootballMatchDTO;
 import com.neoCamp.footballMatch.entity.ClubEntity;
 import com.neoCamp.footballMatch.entity.StadiumEntity;
 import com.neoCamp.footballMatch.entity.FootballMatch;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -13,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FootballMatchMapperTest {
 
+    @BeforeEach
     @Test
     void testToDTO() {
         ClubEntity mandante = new ClubEntity(1L, "Palmeiras", "SP", LocalDate.of(1914,8,26), true);

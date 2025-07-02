@@ -2,6 +2,7 @@ package com.neoCamp.footballMatch.mapper;
 
 import com.neoCamp.footballMatch.dto.StadiumDTO;
 import com.neoCamp.footballMatch.entity.StadiumEntity;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -10,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class StadiumMapperTest {
 
+    @BeforeEach
     @Test
     void testToEntity() {
         LocalDate dataCriacao = LocalDate.of(2001, 7, 8);

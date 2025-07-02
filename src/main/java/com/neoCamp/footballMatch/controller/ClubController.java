@@ -59,5 +59,3 @@ public class ClubController {
 }
 
 
-//listarClubes = listClubs
-//listarComFiltros = listClubsWithFilters

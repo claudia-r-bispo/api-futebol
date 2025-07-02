@@ -18,14 +18,14 @@ public class FootballMatchMapper {
                     footballMatch.getGoalsVisitor()
             );
         }
-        public static FootballMatch toEntity(FootballMatchDTO dto, ClubEntity mandante, ClubEntity visitante, StadiumEntity estadio) {
+        public static FootballMatch toEntity(FootballMatchDTO dto, ClubEntity HomeClub, ClubEntity Visitor, StadiumEntity Stadium) {
             if (dto == null) return null;
 
             FootballMatch entity = new FootballMatch();
             entity.setId(dto.getId());
-            entity.setHomeClub(mandante);
-            entity.setClubVisitor(visitante);
-            entity.setStadium(estadio);
+            entity.setHomeClub(HomeClub);
+            entity.setClubVisitor(Visitor);
+            entity.setStadium(Stadium);
             entity.setDateTimeDeparture(dto.getDateTimeDeparture());
             entity.setHomeTeamGoals(dto.getHomeTeamGoals());
             entity.setGoalsVisitor(dto.getGoalsVisitor());

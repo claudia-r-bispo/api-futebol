@@ -1,5 +1,6 @@
 package com.neoCamp.footballMatch.entity;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -9,6 +10,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FootballMatchTest {
 
+    private ClubEntity homeClub;
+    private ClubEntity clubVisitor;
+    private StadiumEntity stadium;
+    private LocalDateTime dateTime;
+
+    @BeforeEach
     @Test
     void testAllArgsConstructorAndGetters() {
         ClubEntity homeClub = new ClubEntity(1L, "Mandante", "RJ", LocalDate.of(2020,1,1), true);

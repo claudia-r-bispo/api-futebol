@@ -7,7 +7,7 @@ public class ClubMapper {
 
     public static ClubEntity toEntity(ClubDTO dto) {
         if (dto == null) return null;
-        // Se active é null, defina como true!
+
         boolean active = dto.getActive() != null ? dto.getActive() : true;
         return new ClubEntity(
                 dto.getId(),

@@ -1,6 +1,7 @@
 package com.neoCamp.footballMatch.repository;
 
 import com.neoCamp.footballMatch.entity.ClubEntity;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ class ClubRepositoryTest {
 
     @Autowired
     private ClubRepository clubRepository;
+
 
     @Test
     @DisplayName("findByNomeContainingIgnoreCaseAndUfContainingIgnoreCaseAndAtivo works")

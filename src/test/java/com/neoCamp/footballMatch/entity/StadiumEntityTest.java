@@ -1,5 +1,6 @@
 package com.neoCamp.footballMatch.entity;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -8,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class StadiumEntityTest {
 
+    @BeforeEach
     @Test
     void testAllArgsConstructorAndGetters() {
         LocalDate dateCreation = LocalDate.of(2022, 6, 30);

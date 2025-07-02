@@ -71,7 +71,7 @@ public class FootballMatchControllerTest {
     }
 
     @Test
-    void estGetById() {
+    void testGetById() {
         Long id = 1L;
         when(footballMatchService.findById(eq(id)))
             .thenReturn(footballMatchDTO);
