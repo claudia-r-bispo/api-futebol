@@ -5,8 +5,6 @@ import lombok.*;
 
 import java.time.LocalDate;
 
-@Getter
-@Setter
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -36,10 +34,4 @@ public class ClubDTO {
     }
 }
 
-//dataHoraPartida = dateTimeDeparture
-//dataCriacao = dateCreation
-//ativo = active
-//clubeVisitante = clubVisitor
-//clubeMandante = homeClub
-//golsMandante = homeTeamGoals
-//golsVisitante = goalsVisitor
+

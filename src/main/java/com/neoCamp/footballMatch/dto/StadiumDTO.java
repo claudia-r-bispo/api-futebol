@@ -1,16 +1,12 @@
 package com.neoCamp.footballMatch.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 
-    @Getter
-    @Setter
+    @Data
     @NoArgsConstructor @AllArgsConstructor
     public class StadiumDTO {
 
@@ -24,17 +20,15 @@ import com.fasterxml.jackson.annotation.JsonFormat;
         private Integer homeTeamGoals;
         private Integer goalsVisitor;
 
+        // NOVO: Campo para CEP e dados do endereço
+        private String cep;
+        private AddressDTO address;
+
         private Boolean active;
         public Boolean getActive() {
             return active;
         }
+
     }
 
 
-//dataHoraPartida = dateTimeDeparture
-//dataCriacao = dateCreation
-//ativo = active
-//clubeVisitante = clubVisitor
-//clubeMandante = homeClub
-//golsMandante = homeTeamGoals
-//golsVisitante = goalsVisitor

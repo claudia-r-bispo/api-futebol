@@ -1,18 +1,14 @@
 package com.neoCamp.footballMatch.entity;
 
 import jakarta.persistence.*;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Getter  @Setter @NoArgsConstructor @AllArgsConstructor
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "partida")
 public class FootballMatch {
 

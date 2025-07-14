@@ -1,61 +1,167 @@
 package com.neoCamp.footballMatch.entity;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.time.LocalDate;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class StadiumEntityTest {
 
-    @BeforeEach
     @Test
-    void testAllArgsConstructorAndGetters() {
-        LocalDate dateCreation = LocalDate.of(2022, 6, 30);
-        StadiumEntity stadium = new StadiumEntity(1L, "Maracanã", "RJ", true, dateCreation);
+    void createStadiumEntity_Success() {
+        // Arrange & Act - Usando construtor sem parâmetros
+        StadiumEntity stadium = new StadiumEntity();
+        stadium.setId(1L);
+        stadium.setName("Arena Test");
+        stadium.setUf("SP");
+        stadium.setActive(true);
+        stadium.setDateCreation(LocalDate.of(2024, 1, 1));
 
+        // Assert
         assertEquals(1L, stadium.getId());
-        assertEquals("Maracanã", stadium.getName());
-        assertEquals("RJ", stadium.getUf());
+        assertEquals("Arena Test", stadium.getName());
+        assertEquals("SP", stadium.getUf());
         assertTrue(stadium.isActive());
-        assertEquals(dateCreation, stadium.getDateCreation());
+        assertEquals(LocalDate.of(2024, 1, 1), stadium.getDateCreation());
     }
 
     @Test
-    void testSetters() {
-        LocalDate dateCreation = LocalDate.of(2021, 2, 2);
+    void createStadiumEntity_WithAddress() {
+        // Arrange
+        AddressEntity address = new AddressEntity();
+        address.setId(1L);
+        address.setLogradouro("Avenida Paulista");
+        address.setCidade("São Paulo");
+        address.setEstado("SP");
+        address.setCep("01310-100");
+
+        // Act
         StadiumEntity stadium = new StadiumEntity();
+        stadium.setId(1L);
+        stadium.setName("Arena Test");
+        stadium.setUf("SP");
+        stadium.setActive(true);
+        stadium.setDateCreation(LocalDate.of(2024, 1, 1));
+        stadium.setAddress(address);
+
+        // Assert
+        assertEquals(1L, stadium.getId());
+        assertEquals("Arena Test", stadium.getName());
+        assertEquals("SP", stadium.getUf());
+        assertTrue(stadium.isActive());
+        assertEquals(LocalDate.of(2024, 1, 1), stadium.getDateCreation());
+        assertNotNull(stadium.getAddress());
+        assertEquals("Avenida Paulista", stadium.getAddress().getLogradouro());
+        assertEquals("São Paulo", stadium.getAddress().getCidade());
+    }
+
+    @Test
+    void createStadiumEntity_WithAllArgsConstructor() {
+        // Arrange
+        AddressEntity address = new AddressEntity();
+        address.setLogradouro("Avenida Paulista");
+        address.setCidade("São Paulo");
+        address.setEstado("SP");
+        address.setCep("01310-100");
+
+        // Act - Usando construtor com todos os argumentos
+        StadiumEntity stadium = new StadiumEntity(
+                1L,                          // id
+                "Arena Test",               // name
+                "SP",                       // uf
+                true,                       // active
+                LocalDate.of(2024, 1, 1),  // dateCreation
+                address                     // address
+        );
+
+        // Assert
+        assertEquals(1L, stadium.getId());
+        assertEquals("Arena Test", stadium.getName());
+        assertEquals("SP", stadium.getUf());
+        assertTrue(stadium.isActive());
+        assertEquals(LocalDate.of(2024, 1, 1), stadium.getDateCreation());
+        assertNotNull(stadium.getAddress());
+    }
+
+    @Test
+    void stadiumEntity_DefaultActive() {
+        // Arrange & Act
+        StadiumEntity stadium = new StadiumEntity();
+        stadium.setName("Arena Test");
+
+        // Assert - active deve ser true por padrão
+        assertTrue(stadium.isActive());
+    }
+
+    @Test
+    void stadiumEntity_SettersAndGetters() {
+        // Arrange
+        StadiumEntity stadium = new StadiumEntity();
+        LocalDate testDate = LocalDate.of(2023, 6, 15);
+
+        // Act
         stadium.setId(2L);
-        stadium.setName("Allianz Parque");
+        stadium.setName("Estádio do Morumbi");
         stadium.setUf("SP");
         stadium.setActive(false);
-        stadium.setDateCreation(dateCreation);
+        stadium.setDateCreation(testDate);
 
+        // Assert
         assertEquals(2L, stadium.getId());
-        assertEquals("Allianz Parque", stadium.getName());
+        assertEquals("Estádio do Morumbi", stadium.getName());
         assertEquals("SP", stadium.getUf());
         assertFalse(stadium.isActive());
-        assertEquals(dateCreation, stadium.getDateCreation());
+        assertEquals(testDate, stadium.getDateCreation());
     }
 
     @Test
-    void testEqualsAndHashCode() {
-        LocalDate dataCriacao = LocalDate.of(2022, 6, 30);
-        StadiumEntity est1 = new StadiumEntity(1L, "Maracanã", "RJ", true, dataCriacao);
-        StadiumEntity est2 = new StadiumEntity(1L, "Maracanã", "RJ", true, dataCriacao);
+    void stadiumEntity_NullAddress() {
+        // Arrange & Act
+        StadiumEntity stadium = new StadiumEntity();
+        stadium.setName("Arena Test");
+        stadium.setAddress(null);
 
-        assertEquals(est1, est2);
-        assertEquals(est1.hashCode(), est2.hashCode());
+        // Assert
+        assertNull(stadium.getAddress());
     }
 
     @Test
-    void testToString() {
-        LocalDate dataCriacao = LocalDate.of(2022, 6, 30);
-        StadiumEntity estadio = new StadiumEntity(1L, "Maracanã", "RJ", true, dataCriacao);
-        String str = estadio.toString();
-        assertTrue(str.contains("Maracanã"));
-        assertTrue(str.contains("RJ"));
-        assertTrue(str.contains("2022"));
+    void stadiumEntity_EqualsAndHashCode() {
+        // Arrange
+        AddressEntity address1 = new AddressEntity();
+        address1.setId(1L);
+
+        AddressEntity address2 = new AddressEntity();
+        address2.setId(1L);
+
+        StadiumEntity stadium1 = new StadiumEntity();
+        stadium1.setId(1L);
+        stadium1.setName("Arena Test");
+        stadium1.setAddress(address1);
+
+        StadiumEntity stadium2 = new StadiumEntity();
+        stadium2.setId(1L);
+        stadium2.setName("Arena Test");
+        stadium2.setAddress(address2);
+
+        // Act & Assert - Lombok @Data gera equals e hashCode
+        assertEquals(stadium1, stadium2);
+        assertEquals(stadium1.hashCode(), stadium2.hashCode());
+    }
+
+    @Test
+    void stadiumEntity_ToString() {
+        // Arrange
+        StadiumEntity stadium = new StadiumEntity();
+        stadium.setId(1L);
+        stadium.setName("Arena Test");
+        stadium.setUf("SP");
+
+        // Act
+        String toString = stadium.toString();
+
+        // Assert - Lombok @Data gera toString
+        assertNotNull(toString);
+        assertTrue(toString.contains("Arena Test"));
+        assertTrue(toString.contains("SP"));
     }
 }

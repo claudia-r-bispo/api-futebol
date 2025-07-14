@@ -11,7 +11,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/partidas")
 public class FootballMatchController {
 
-    private FootballMatchService footballMatchService;
+    private final FootballMatchService footballMatchService;
+
+    public FootballMatchController(FootballMatchService footballMatchService) {
+        this.footballMatchService = footballMatchService;
+    }
 
     @PostMapping
     public ResponseEntity<FootballMatchDTO> createFootballMatch(@RequestBody FootballMatchDTO dto) {

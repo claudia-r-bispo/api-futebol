@@ -14,5 +14,5 @@ public class DirectConfrontationDTO {
     private Long victoriesClubA;
     private Long victoriesClubB;
     private Long draw;
-    //empates = draw
+
 }

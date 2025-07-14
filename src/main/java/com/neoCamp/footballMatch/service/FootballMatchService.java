@@ -1,13 +1,12 @@
 package com.neoCamp.footballMatch.service;
 
-
 import com.neoCamp.footballMatch.dto.FootballMatchDTO;
 import com.neoCamp.footballMatch.entity.ClubEntity;
 import com.neoCamp.footballMatch.entity.StadiumEntity;
 import com.neoCamp.footballMatch.entity.FootballMatch;
 import com.neoCamp.footballMatch.mapper.FootballMatchMapper;
-import com.neoCamp.footballMatch.repository.StadiumRepository;
 import com.neoCamp.footballMatch.repository.FootballMatchRepository;
+import com.neoCamp.footballMatch.repository.StadiumRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,16 +15,21 @@ import org.springframework.stereotype.Service;
 @Service
 public class FootballMatchService {
 
-
-    private FootballMatchRepository footballMatchRepository;
+    private final FootballMatchRepository footballMatchRepository;
+    private final ClubService clubService;
+    private final StadiumService stadiumService;
+    private final StadiumRepository stadiumRepository;
 
     @Autowired
-    private ClubService clubService;
-
-    @Autowired
-    private StadiumService stadiumService;
-    @Autowired
-    private StadiumRepository stadiumRepository;
+    public FootballMatchService(FootballMatchRepository footballMatchRepository,
+                                ClubService clubService,
+                                StadiumService stadiumService,
+                                StadiumRepository stadiumRepository) {
+        this.footballMatchRepository = footballMatchRepository;
+        this.clubService = clubService;
+        this.stadiumService = stadiumService;
+        this.stadiumRepository = stadiumRepository;
+    }
 
     public FootballMatchDTO createPartida(FootballMatchDTO dto) {
         ClubEntity mandante = clubService.findEntityById(dto.getHomeClubId());
@@ -71,5 +75,5 @@ public class FootballMatchService {
         return footballMatchRepository.findAll(pageable).map(FootballMatchMapper::toDto);
     }
 
-
 }
+

@@ -1,18 +1,15 @@
 package com.neoCamp.footballMatch.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
 import lombok.*;
-import jakarta.persistence.Id;
 
 import java.time.LocalDate;
 
 
 @Entity
 @Data
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor
+@Builder
+@NoArgsConstructor @AllArgsConstructor
 public class StadiumEntity {
 
 
@@ -27,13 +24,18 @@ public class StadiumEntity {
         @Column(nullable=false, length=2)
         private String uf;
 
-        @Column(nullable=false)
+        @Builder.Default // ← Adicionar esta anotação para o valor padrão
+        @Column(nullable = false)
         private boolean active = true;
+
 
         @Column(nullable=false)
         private LocalDate dateCreation;
 
 
+        @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+        @JoinColumn(name = "address_id", nullable = false)
+        private AddressEntity address;
 
 
 

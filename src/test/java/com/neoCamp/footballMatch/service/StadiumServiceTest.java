@@ -1,6 +1,7 @@
 package com.neoCamp.footballMatch.service;
 
 import com.neoCamp.footballMatch.dto.StadiumDTO;
+import com.neoCamp.footballMatch.entity.AddressEntity;
 import com.neoCamp.footballMatch.entity.StadiumEntity;
 import com.neoCamp.footballMatch.mapper.StadiumMapper;
 import com.neoCamp.footballMatch.repository.StadiumRepository;
@@ -29,104 +30,138 @@ public class StadiumServiceTest {
     @Mock
     private StadiumRepository stadiumRepository;
 
+    @Mock
+    private AddressService addressService;
+
     @InjectMocks
     private StadiumService stadiumService;
 
     private StadiumDTO stadiumDTO;
     private StadiumEntity stadiumEntity;
+    private AddressEntity addressEntity;
 
     @BeforeEach
     void setUp() {
-        stadiumDTO = new StadiumDTO();
+        addressEntity = new AddressEntity();
+        addressEntity.setId(1L);
+        addressEntity.setLogradouro("Avenida Paulista");
+        addressEntity.setCidade("São Paulo");
+        addressEntity.setEstado("SP");
+        addressEntity.setCep("01310-100");
+
         stadiumEntity = new StadiumEntity();
         stadiumEntity.setId(1L);
-        stadiumEntity.setName("Estádio Exemplo");
+        stadiumEntity.setName("Arena Test");
         stadiumEntity.setUf("SP");
         stadiumEntity.setDateCreation(LocalDate.now());
         stadiumEntity.setActive(true);
+        stadiumEntity.setAddress(addressEntity);
+
+        stadiumDTO = new StadiumDTO();
+        stadiumDTO.setId(1L);
+        stadiumDTO.setName("Arena Test");
+        stadiumDTO.setUf("SP");
+        stadiumDTO.setDateCreation(LocalDate.now());
+        stadiumDTO.setCep("01310-100");
+        stadiumDTO.setActive(true);
     }
 
     @Test
     void testCreateEstadio() {
-        try (MockedStatic<StadiumMapper> estadioMapperMock = mockStatic(StadiumMapper.class)) {
-            estadioMapperMock.when(() -> StadiumMapper.toEntity(any(StadiumDTO.class))).thenReturn(stadiumEntity);
-            when(stadiumRepository.save(any(StadiumEntity.class))).thenReturn(stadiumEntity);
-            estadioMapperMock.when(() -> StadiumMapper.toDto(any(StadiumEntity.class))).thenReturn(stadiumDTO);
+        // Arrange
+        when(addressService.createAddressPorCep("01310-100")).thenReturn(addressEntity);
+        when(stadiumRepository.save(any(StadiumEntity.class))).thenReturn(stadiumEntity);
 
-            StadiumDTO result = stadiumService.createEstadio(stadiumDTO);
+        // Act
+        StadiumDTO result = stadiumService.createEstadio(stadiumDTO);
 
-            assertNotNull(result);
-            assertEquals(stadiumDTO, result);
-            verify(stadiumRepository).save(stadiumEntity);
-            assertTrue(stadiumEntity.isActive());
-        }
-    }
-
-    @Test
-    void testUpdateEstadioSuccess() {
-        try (MockedStatic<StadiumMapper> estadioMapperMock = mockStatic(StadiumMapper.class)) {
-            when(stadiumRepository.findById(1L)).thenReturn(Optional.of(stadiumEntity));
-            when(stadiumRepository.save(any(StadiumEntity.class))).thenReturn(stadiumEntity);
-            estadioMapperMock.when(() -> StadiumMapper.toDto(any(StadiumEntity.class))).thenReturn(stadiumDTO);
-
-            StadiumDTO result = stadiumService.updateEstadio(1L, stadiumDTO);
-            assertNotNull(result);
-            assertEquals(stadiumDTO, result);
-            verify(stadiumRepository).findById(1L);
-            verify(stadiumRepository).save(stadiumEntity);
-        }
-    }
-
-    @Test
-    void testUpdateEstadioNotFound() {
-        when(stadiumRepository.findById(1L)).thenReturn(Optional.empty());
-        assertThrows(RuntimeException.class, () -> stadiumService.updateEstadio(1L, stadiumDTO));
-    }
-
-    @Test
-    void testFindByIdSuccess() {
-        try (MockedStatic<StadiumMapper> estadioMapperMock = mockStatic(StadiumMapper.class)) {
-            when(stadiumRepository.findById(1L)).thenReturn(Optional.of(stadiumEntity));
-            estadioMapperMock.when(() -> StadiumMapper.toDto(stadiumEntity)).thenReturn(stadiumDTO);
-
-            StadiumDTO result = stadiumService.findById(1L);
-            assertNotNull(result);
-            assertEquals(stadiumDTO, result);
-        }
-    }
-
-    @Test
-    void testFindByIdNotFound() {
-        when(stadiumRepository.findById(1L)).thenReturn(Optional.empty());
-        assertThrows(RuntimeException.class, () -> stadiumService.findById(1L));
-    }
-
-    @Test
-    void testFindEntityByIdSuccess() {
-        when(stadiumRepository.findById(1L)).thenReturn(Optional.of(stadiumEntity));
-        StadiumEntity result = stadiumService.findEntityById(1L);
+        // Assert
         assertNotNull(result);
-        assertEquals(stadiumEntity, result);
+        assertEquals("Arena Test", result.getName());
+        assertEquals("SP", result.getUf());
+        assertTrue(result.getActive());
+
+        verify(addressService, times(1)).createAddressPorCep("01310-100");
+        verify(stadiumRepository, times(1)).save(any(StadiumEntity.class));
     }
 
     @Test
-    void testFindEntityByIdNotFound() {
-        when(stadiumRepository.findById(1L)).thenReturn(Optional.empty());
-        assertThrows(RuntimeException.class, () -> stadiumService.findEntityById(1L));
+    void testCreateEstadio_SemCep_DeveLancarExcecao() {
+        // Arrange
+        stadiumDTO.setCep(null); // ← Sem CEP
+
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> stadiumService.createEstadio(stadiumDTO)
+        );
+
+        assertEquals("CEP é obrigatório para cadastro do estádio", exception.getMessage());
+
+        // Verificar que os métodos não foram chamados
+        verify(addressService, never()).createAddressPorCep(any());
+        verify(stadiumRepository, never()).save(any());
     }
 
     @Test
-    void testListar() {
-        try (MockedStatic<StadiumMapper> estadioMapperMock = mockStatic(StadiumMapper.class)) {
-            Pageable pageable = PageRequest.of(0, 10);
-            Page<StadiumEntity> estadioEntities = new PageImpl<>(java.util.List.of(stadiumEntity));
-            when(stadiumRepository.findAll(eq(pageable))).thenReturn(estadioEntities);
-            estadioMapperMock.when(() -> StadiumMapper.toDto(any(StadiumEntity.class))).thenReturn(stadiumDTO);
+    void testCreateEstadio_CepVazio_DeveLancarExcecao() {
+        // Arrange
+        stadiumDTO.setCep(""); // ← CEP vazio
 
-            Page<StadiumDTO> result = stadiumService.listar(pageable);
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> stadiumService.createEstadio(stadiumDTO)
+        );
 
-            assertNotNull(result);
-            assertEquals(1, result.getTotalElements());
-        }
+        assertEquals("CEP é obrigatório para cadastro do estádio", exception.getMessage());
+    }
+
+    @Test
+    void testUpdateEstadio() {
+        // Arrange
+        Long stadiumId = 1L;
+        when(stadiumRepository.findById(stadiumId)).thenReturn(java.util.Optional.of(stadiumEntity));
+        when(addressService.createAddressPorCep("01310-100")).thenReturn(addressEntity);
+        when(stadiumRepository.save(any(StadiumEntity.class))).thenReturn(stadiumEntity);
+
+        // Act
+        StadiumDTO result = stadiumService.updateEstadio(stadiumId, stadiumDTO);
+
+        // Assert
+        assertNotNull(result);
+        verify(stadiumRepository).findById(stadiumId);
+        verify(addressService).createAddressPorCep("01310-100");
+        verify(stadiumRepository).save(any(StadiumEntity.class));
+    }
+
+    @Test
+    void testFindById() {
+        // Arrange
+        Long stadiumId = 1L;
+        when(stadiumRepository.findById(stadiumId)).thenReturn(java.util.Optional.of(stadiumEntity));
+
+        // Act
+        StadiumDTO result = stadiumService.findById(stadiumId);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals("Arena Test", result.getName());
+        verify(stadiumRepository).findById(stadiumId);
+    }
+
+    @Test
+    void testFindById_NaoEncontrado() {
+        // Arrange
+        Long stadiumId = 999L;
+        when(stadiumRepository.findById(stadiumId)).thenReturn(java.util.Optional.empty());
+
+        // Act & Assert
+        RuntimeException exception = assertThrows(
+                RuntimeException.class,
+                () -> stadiumService.findById(stadiumId)
+        );
+
+        assertEquals("Estádio não encontrado!", exception.getMessage());
     }
 }

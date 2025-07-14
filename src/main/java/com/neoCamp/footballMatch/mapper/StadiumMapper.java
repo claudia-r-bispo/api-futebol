@@ -13,6 +13,11 @@ public class StadiumMapper {
         stadiumEntity.setUf(dto.getUf());
         stadiumEntity.setDateCreation(dto.getDateCreation());
         stadiumEntity.setActive(dto.getActive() == null ? true : dto.getActive());
+        // Mapeamento do endereço (se existir)
+        if (dto.getAddress() != null) {
+            stadiumEntity.setAddress(AddressMapper.toEntity(dto.getAddress()));
+        }
+
         return stadiumEntity;
     }
 
@@ -29,6 +34,13 @@ public class StadiumMapper {
         stadiumDTO.setUf(stadiumEntity.getUf());
         stadiumDTO.setDateCreation(stadiumEntity.getDateCreation());
         stadiumDTO.setActive(stadiumEntity.isActive());
+
+        // Mapeamento do endereço (se existir)
+        if (stadiumEntity.getAddress() != null) {
+            stadiumDTO.setAddress(AddressMapper.toDto(stadiumEntity.getAddress()));
+            stadiumDTO.setCep(stadiumEntity.getAddress().getCep()); // Para facilitar o acesso
+        }
+
         return stadiumDTO;
     }
 

@@ -25,8 +25,3 @@ public class RankingDTO {
     }
 
 }
-//empate = draw
-//derrotas = defeats
-//golsPro = goalsPro
-//golsContra = goalsagainst
-//pontos = points

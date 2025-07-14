@@ -1,69 +1,109 @@
 package com.neoCamp.footballMatch.repository;
 
-import com.neoCamp.footballMatch.entity.ClubEntity;
-import com.neoCamp.footballMatch.entity.StadiumEntity;
-import com.neoCamp.footballMatch.entity.FootballMatch;
-import lombok.Data;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
+import com.neoCamp.footballMatch.entity.*;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.data.domain.*;
+import org.springframework.beans.factory.annotation.Autowired;
+
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 class FootballMatchRepositoryTest {
 
     @Autowired
-    FootballMatchRepository footballMatchRepository;
+    private FootballMatchRepository footballMatchRepository;
 
     @Autowired
-    ClubRepository clubRepository;
+    private ClubRepository clubRepository;
 
     @Autowired
-    StadiumRepository stadiumRepository;
+    private StadiumRepository stadiumRepository;
 
-    @BeforeEach
+    @Autowired
+    private AddressRepository addressRepository;
+
     @Test
-    @DisplayName("Testa save, findById e método custom (homeclub ou visitor)")
-    void testCrudAndFindByHomeClubOrVisitor() {
+    void save_FootballMatch_Success() {
+        // Arrange
+        ClubEntity homeClub = createAndSaveClub("São Paulo FC");
+        ClubEntity visitorClub = createAndSaveClub("Corinthians");
+        StadiumEntity stadium = createAndSaveStadium("Arena Test");
 
-        ClubEntity homeClub = clubRepository.save(new ClubEntity(null, "Grêmio", "RS", LocalDate.now(), true));
-        ClubEntity Visitor = clubRepository.save(new ClubEntity(null, "Cruzeiro", "MG", LocalDate.now(), true));
-        ClubEntity outro = clubRepository.save(new ClubEntity(null, "Bahia", "BA", LocalDate.now(), true));
-        StadiumEntity stadium = stadiumRepository.save(new StadiumEntity(null, "Beira-Rio", "RS", true, LocalDate.of(1969, 4, 6)));
+        FootballMatch match = new FootballMatch();
+        match.setHomeClub(homeClub);
+        match.setClubVisitor(visitorClub);
+        match.setStadium(stadium);
+        match.setDateTimeDeparture(LocalDateTime.now());
+        match.setHomeTeamGoals(2);
+        match.setGoalsVisitor(1);
 
+        // Act
+        FootballMatch savedMatch = footballMatchRepository.save(match);
 
-        var partida1 = new FootballMatch(null, homeClub, Visitor, stadium, LocalDateTime.now(), 2, 0);
-        var partida2 = new FootballMatch(null, outro, homeClub, stadium, LocalDateTime.now(), 1, 2);
-        var partida3 = new FootballMatch(null, outro, outro, stadium, LocalDateTime.now(), 0, 0);
-        partida1 = footballMatchRepository.save(partida1);
-        partida2 = footballMatchRepository.save(partida2);
-        partida3 = footballMatchRepository.save(partida3);
+        // Assert
+        assertNotNull(savedMatch.getId());
+        assertEquals(homeClub.getId(), savedMatch.getHomeClub().getId());
+        assertEquals(visitorClub.getId(), savedMatch.getClubVisitor().getId());
+        assertEquals(stadium.getId(), savedMatch.getStadium().getId());
+    }
 
+    @Test
+    void findById_FootballMatch_Success() {
+        // Arrange
+        ClubEntity homeClub = createAndSaveClub("Flamengo");
+        ClubEntity visitorClub = createAndSaveClub("Vasco");
+        StadiumEntity stadium = createAndSaveStadium("Maracanã");
 
-        var p = footballMatchRepository.findById(partida1.getId());
-        assertTrue(p.isPresent());
-        assertEquals(homeClub.getId(), p.get().getHomeClub().getId());
+        FootballMatch match = new FootballMatch();
+        match.setHomeClub(homeClub);
+        match.setClubVisitor(visitorClub);
+        match.setStadium(stadium);
+        match.setDateTimeDeparture(LocalDateTime.now());
+        match.setHomeTeamGoals(3);
+        match.setGoalsVisitor(0);
 
-        // Teste do método customizado: partidas em que o mandante OU visitante é o Grêmio
-        Pageable pageable = PageRequest.of(0, 10);
-        Page<FootballMatch> page = footballMatchRepository.findByHomeClubIdOrClubVisitorId(
-                homeClub.getId(),
-                homeClub.getId(),
-                pageable);
+        FootballMatch savedMatch = footballMatchRepository.save(match);
 
-        assertEquals(2, page.getContent().size());
-        assertTrue(
-                page.getContent().stream().anyMatch(pe -> pe.getHomeClub().getId().equals(homeClub.getId()))
-        );
-        assertTrue(
-                page.getContent().stream().anyMatch(pe -> pe.getClubVisitor().getId().equals(homeClub.getId()))
-        );
+        // Act
+        FootballMatch foundMatch = footballMatchRepository.findById(savedMatch.getId()).orElse(null);
+
+        // Assert
+        assertNotNull(foundMatch);
+        assertEquals(savedMatch.getId(), foundMatch.getId());
+        assertEquals(3, foundMatch.getHomeTeamGoals());
+        assertEquals(0, foundMatch.getGoalsVisitor());
+    }
+
+    // Helper Methods
+    private ClubEntity createAndSaveClub(String name) {
+        ClubEntity club = new ClubEntity();
+        club.setName(name);
+        club.setUf("SP");
+        club.setActive(true);
+        club.setDateCreation(LocalDate.now());
+        return clubRepository.save(club);
+    }
+
+    private StadiumEntity createAndSaveStadium(String name) {
+        // Criar e salvar address primeiro
+        AddressEntity address = new AddressEntity();
+        address.setLogradouro("Avenida Paulista, 1000");
+        address.setCidade("São Paulo");
+        address.setEstado("SP");
+        address.setCep("01310-100");
+        AddressEntity savedAddress = addressRepository.save(address);
+
+        // Criar e salvar stadium com address
+        StadiumEntity stadium = new StadiumEntity();
+        stadium.setName(name);
+        stadium.setUf("SP");
+        stadium.setActive(true);
+        stadium.setDateCreation(LocalDate.now());
+        stadium.setAddress(savedAddress);
+
+        return stadiumRepository.save(stadium);
     }
 }

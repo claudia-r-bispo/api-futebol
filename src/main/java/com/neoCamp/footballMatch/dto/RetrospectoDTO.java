@@ -18,6 +18,3 @@ public class RetrospectoDTO {
 }
 
 
-//totalJogos= totalGames
-//empate = draw
-//derrotas = defeats
