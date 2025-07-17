@@ -3,6 +3,7 @@ package com.neoCamp.footballMatch.entity;
 import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
+import java.util.Collections;
 
 class StadiumEntityTest {
 
@@ -29,10 +30,10 @@ class StadiumEntityTest {
         // Arrange
         AddressEntity address = new AddressEntity();
         address.setId(1L);
-        address.setLogradouro("Avenida Paulista");
-        address.setCidade("São Paulo");
-        address.setEstado("SP");
-        address.setCep("01310-100");
+        address.setStreet("Avenida Paulista");
+        address.setCity("São Paulo");
+        address.setState("SP");
+        address.setZipCode("01310-100");
 
         // Act
         StadiumEntity stadium = new StadiumEntity();
@@ -50,27 +51,28 @@ class StadiumEntityTest {
         assertTrue(stadium.isActive());
         assertEquals(LocalDate.of(2024, 1, 1), stadium.getDateCreation());
         assertNotNull(stadium.getAddress());
-        assertEquals("Avenida Paulista", stadium.getAddress().getLogradouro());
-        assertEquals("São Paulo", stadium.getAddress().getCidade());
+        assertEquals("Avenida Paulista", stadium.getAddress().getStreet());
+        assertEquals("São Paulo", stadium.getAddress().getCity());
     }
 
     @Test
     void createStadiumEntity_WithAllArgsConstructor() {
         // Arrange
         AddressEntity address = new AddressEntity();
-        address.setLogradouro("Avenida Paulista");
-        address.setCidade("São Paulo");
-        address.setEstado("SP");
-        address.setCep("01310-100");
+        address.setStreet("Avenida Paulista");
+        address.setCity("São Paulo");
+        address.setState("SP");
+        address.setZipCode("01310-100");
 
         // Act - Usando construtor com todos os argumentos
         StadiumEntity stadium = new StadiumEntity(
                 1L,                          // id
                 "Arena Test",               // name
                 "SP",                       // uf
-                true,                       // active
-                LocalDate.of(2024, 1, 1),  // dateCreation
-                address                     // address
+                true,                        // active
+                LocalDate.of(2024, 1, 1),    // dateCreation
+                address,                     // address
+                Collections.emptyList()      // addresses
         );
 
         // Assert
@@ -80,6 +82,8 @@ class StadiumEntityTest {
         assertTrue(stadium.isActive());
         assertEquals(LocalDate.of(2024, 1, 1), stadium.getDateCreation());
         assertNotNull(stadium.getAddress());
+        assertEquals("Avenida Paulista", stadium.getAddress().getStreet());
+        assertEquals("São Paulo", stadium.getAddress().getCity());
     }
 
     @Test

@@ -30,10 +30,10 @@ class AddressMapperTest {
         // Setup AddressEntity
         addressEntity = new AddressEntity();
         addressEntity.setId(1L);
-        addressEntity.setLogradouro("Avenida Paulista");
-        addressEntity.setCidade("São Paulo");
-        addressEntity.setEstado("SP");
-        addressEntity.setCep("01310-100");
+        addressEntity.setStreet("Avenida Paulista");
+        addressEntity.setCity("São Paulo");
+        addressEntity.setState("SP");
+        addressEntity.setZipCode("01310-100");
     }
 
     @Test
@@ -45,10 +45,10 @@ class AddressMapperTest {
         // Assert
         assertNotNull(result);
         assertEquals(addressDTO.getId(), result.getId());
-        assertEquals(addressDTO.getLogradouro(), result.getLogradouro());
-        assertEquals(addressDTO.getCidade(), result.getCidade());
-        assertEquals(addressDTO.getEstado(), result.getEstado());
-        assertEquals(addressDTO.getCep(), result.getCep());
+        assertEquals(addressDTO.getLogradouro(), result.getStreet());
+        assertEquals(addressDTO.getCidade(), result.getCity());
+        assertEquals(addressDTO.getEstado(), result.getState());
+        assertEquals(addressDTO.getCep(), result.getZipCode());
         assertNull(result.getStadium()); // Stadium não é mapeado no toEntity
     }
 
@@ -71,10 +71,10 @@ class AddressMapperTest {
         // Assert
         assertNotNull(result);
         assertEquals(addressEntity.getId(), result.getId());
-        assertEquals(addressEntity.getLogradouro(), result.getLogradouro());
-        assertEquals(addressEntity.getCidade(), result.getCidade());
-        assertEquals(addressEntity.getEstado(), result.getEstado());
-        assertEquals(addressEntity.getCep(), result.getCep());
+        assertEquals(addressEntity.getStreet(), result.getLogradouro());
+        assertEquals(addressEntity.getCity(), result.getCidade());
+        assertEquals(addressEntity.getState(), result.getEstado());
+        assertEquals(addressEntity.getZipCode(), result.getCep());
     }
 
     @Test
@@ -104,10 +104,10 @@ class AddressMapperTest {
         // Assert
         assertNotNull(result);
         assertNull(result.getId());
-        assertNull(result.getLogradouro());
-        assertNull(result.getCidade());
-        assertNull(result.getEstado());
-        assertNull(result.getCep());
+        assertNull(result.getStreet());
+        assertNull(result.getCity());
+        assertNull(result.getState());
+        assertNull(result.getZipCode());
     }
 
     @Test
@@ -116,10 +116,10 @@ class AddressMapperTest {
         // Arrange
         AddressEntity entityWithNulls = new AddressEntity();
         entityWithNulls.setId(null);
-        entityWithNulls.setLogradouro(null);
-        entityWithNulls.setCidade(null);
-        entityWithNulls.setEstado(null);
-        entityWithNulls.setCep(null);
+        entityWithNulls.setStreet(null);
+        entityWithNulls.setCity(null);
+        entityWithNulls.setState(null);
+        entityWithNulls.setZipCode(null);
 
         // Act
         AddressDTO result = AddressMapper.toDto(entityWithNulls);
@@ -150,10 +150,10 @@ class AddressMapperTest {
         // Assert
         assertNotNull(result);
         assertNull(result.getId()); // ID deve ser null pois será gerado pelo banco
-        assertEquals("Avenida Paulista", result.getLogradouro());
-        assertEquals("São Paulo", result.getCidade());
-        assertEquals("SP", result.getEstado());
-        assertEquals("01310-100", result.getCep());
+        assertEquals("Avenida Paulista", result.getStreet());
+        assertEquals("São Paulo", result.getCity());
+        assertEquals("SP", result.getState());
+        assertEquals("01310-100", result.getZipCode());
     }
 
     @Test
@@ -167,10 +167,10 @@ class AddressMapperTest {
         addressDTO.setCidade("Rio de Janeiro");
 
         // Assert
-        assertNotEquals(addressDTO.getLogradouro(), result.getLogradouro());
-        assertNotEquals(addressDTO.getCidade(), result.getCidade());
-        assertEquals("Avenida Paulista", result.getLogradouro()); // Valor original
-        assertEquals("São Paulo", result.getCidade()); // Valor original
+        assertNotEquals(addressDTO.getLogradouro(), result.getStreet());
+        assertNotEquals(addressDTO.getCidade(), result.getCity());
+        assertEquals("Avenida Paulista", result.getStreet()); // Valor original
+        assertEquals("São Paulo", result.getCity()); // Valor original
     }
 
     @Test
@@ -180,12 +180,12 @@ class AddressMapperTest {
         AddressDTO result = AddressMapper.toDto(addressEntity);
 
         // Modificar a Entity original
-        addressEntity.setLogradouro("Rua Augusta");
-        addressEntity.setCidade("Rio de Janeiro");
+        addressEntity.setStreet("Rua Augusta");
+        addressEntity.setCity("Rio de Janeiro");
 
         // Assert
-        assertNotEquals(addressEntity.getLogradouro(), result.getLogradouro());
-        assertNotEquals(addressEntity.getCidade(), result.getCidade());
+        assertNotEquals(addressEntity.getStreet(), result.getLogradouro());
+        assertNotEquals(addressEntity.getCity(), result.getCidade());
         assertEquals("Avenida Paulista", result.getLogradouro()); // Valor original
         assertEquals("São Paulo", result.getCidade()); // Valor original
     }
@@ -211,7 +211,7 @@ class AddressMapperTest {
             AddressEntity result = AddressMapper.toEntity(addressDTO);
 
             // Assert
-            assertEquals(logradouro, result.getLogradouro());
+            assertEquals(logradouro, result.getStreet());
         }
     }
 
@@ -235,7 +235,7 @@ class AddressMapperTest {
             AddressEntity result = AddressMapper.toEntity(addressDTO);
 
             // Assert
-            assertEquals(cep, result.getCep());
+            assertEquals(cep, result.getZipCode());
         }
     }
 
@@ -255,7 +255,7 @@ class AddressMapperTest {
         // Assert
         assertNotNull(result);
         assertEquals(addressEntity.getId(), result.getId());
-        assertEquals(addressEntity.getLogradouro(), result.getLogradouro());
+        assertEquals(addressEntity.getStreet(), result.getLogradouro());
         // Stadium não deve aparecer no DTO pois não há campo para isso
     }
 
@@ -279,10 +279,10 @@ class AddressMapperTest {
 
         // Assert
         assertEquals(addressEntity.getId(), resultEntity.getId());
-        assertEquals(addressEntity.getLogradouro(), resultEntity.getLogradouro());
-        assertEquals(addressEntity.getCidade(), resultEntity.getCidade());
-        assertEquals(addressEntity.getEstado(), resultEntity.getEstado());
-        assertEquals(addressEntity.getCep(), resultEntity.getCep());
+        assertEquals(addressEntity.getStreet(), resultEntity.getStreet());
+        assertEquals(addressEntity.getCity(), resultEntity.getCity());
+        assertEquals(addressEntity.getState(), resultEntity.getState());
+        assertEquals(addressEntity.getZipCode(), resultEntity.getZipCode());
     }
 
     @Test
@@ -311,10 +311,10 @@ class AddressMapperTest {
         AddressEntity result = AddressMapper.toEntity(addressDTO);
 
         // Assert
-        assertEquals(" Avenida Paulista ", result.getLogradouro());
-        assertEquals("  São Paulo  ", result.getCidade());
-        assertEquals(" SP ", result.getEstado());
-        assertEquals(" 01310-100 ", result.getCep());
+        assertEquals(" Avenida Paulista ", result.getStreet());
+        assertEquals("  São Paulo  ", result.getCity());
+        assertEquals(" SP ", result.getState());
+        assertEquals(" 01310-100 ", result.getZipCode());
     }
 
     @Test
@@ -330,10 +330,10 @@ class AddressMapperTest {
         AddressEntity result = AddressMapper.toEntity(addressDTO);
 
         // Assert
-        assertEquals("", result.getLogradouro());
-        assertEquals("", result.getCidade());
-        assertEquals("", result.getEstado());
-        assertEquals("", result.getCep());
+        assertEquals("", result.getStreet());
+        assertEquals("", result.getCity());
+        assertEquals("", result.getState());
+        assertEquals("", result.getZipCode());
     }
 
     @Test

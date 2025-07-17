@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.beans.factory.annotation.Autowired;
 
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.*;
@@ -90,10 +89,11 @@ class FootballMatchRepositoryTest {
     private StadiumEntity createAndSaveStadium(String name) {
         // Criar e salvar address primeiro
         AddressEntity address = new AddressEntity();
-        address.setLogradouro("Avenida Paulista, 1000");
-        address.setCidade("São Paulo");
-        address.setEstado("SP");
-        address.setCep("01310-100");
+        address.setStreet("Avenida Paulista");
+        address.setNumber("1000");
+        address.setCity("São Paulo");
+        address.setState("SP");
+        address.setZipCode("01310-100");
         AddressEntity savedAddress = addressRepository.save(address);
 
         // Criar e salvar stadium com address

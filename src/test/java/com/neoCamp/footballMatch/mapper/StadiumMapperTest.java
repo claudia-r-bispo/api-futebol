@@ -42,7 +42,7 @@ class StadiumMapperTest {
         assertEquals(dto.getDateCreation(), entity.getDateCreation());
         assertTrue(entity.isActive());
         assertNotNull(entity.getAddress());
-        assertEquals("Avenida Paulista", entity.getAddress().getLogradouro());
+        assertEquals("Avenida Paulista", entity.getAddress().getStreet());
     }
 
     @Test
@@ -75,10 +75,10 @@ class StadiumMapperTest {
         // Arrange
         AddressEntity addressEntity = new AddressEntity();
         addressEntity.setId(1L);
-        addressEntity.setLogradouro("Avenida Paulista");
-        addressEntity.setCidade("São Paulo");
-        addressEntity.setEstado("SP");
-        addressEntity.setCep("01310-100");
+        addressEntity.setStreet("Avenida Paulista");
+        addressEntity.setCity("São Paulo");
+        addressEntity.setState("SP");
+        addressEntity.setZipCode("01310-100");
 
         StadiumEntity entity = new StadiumEntity();
         entity.setId(1L);

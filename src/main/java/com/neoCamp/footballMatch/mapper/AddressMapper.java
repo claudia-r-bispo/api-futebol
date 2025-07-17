@@ -1,8 +1,6 @@
 package com.neoCamp.footballMatch.mapper;
 
 import com.neoCamp.footballMatch.dto.AddressDTO;
-import com.neoCamp.footballMatch.dto.AddressDTO;
-import com.neoCamp.footballMatch.entity.AddressEntity;
 import com.neoCamp.footballMatch.entity.AddressEntity;
 
 public class AddressMapper {
@@ -10,12 +8,13 @@ public class AddressMapper {
     public static AddressEntity toEntity(AddressDTO dto) {
         if (dto == null) return null;
 
-       AddressEntity entity = new AddressEntity();
+        AddressEntity entity = new AddressEntity();
         entity.setId(dto.getId());
-        entity.setLogradouro(dto.getLogradouro());
-        entity.setCidade(dto.getCidade());
-        entity.setEstado(dto.getEstado());
-        entity.setCep(dto.getCep());
+        entity.setStreet(dto.getLogradouro());
+        entity.setCity(dto.getCidade());
+        entity.setState(dto.getEstado());
+        entity.setZipCode(dto.getCep());
+        // Não existe getNumero() em AddressDTO, então não setar number
         return entity;
     }
 
@@ -24,10 +23,11 @@ public class AddressMapper {
 
         AddressDTO dto = new AddressDTO();
         dto.setId(entity.getId());
-        dto.setLogradouro(entity.getLogradouro());
-        dto.setCidade(entity.getCidade());
-        dto.setEstado(entity.getEstado());
-        dto.setCep(entity.getCep());
+        dto.setLogradouro(entity.getStreet());
+        dto.setCidade(entity.getCity());
+        dto.setEstado(entity.getState());
+        dto.setCep(entity.getZipCode());
+        // Não existe setNumero() em AddressDTO, então não setar numero
         return dto;
     }
 }

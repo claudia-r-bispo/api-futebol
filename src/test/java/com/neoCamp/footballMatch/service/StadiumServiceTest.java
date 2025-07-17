@@ -44,10 +44,11 @@ public class StadiumServiceTest {
     void setUp() {
         addressEntity = new AddressEntity();
         addressEntity.setId(1L);
-        addressEntity.setLogradouro("Avenida Paulista");
-        addressEntity.setCidade("São Paulo");
-        addressEntity.setEstado("SP");
-        addressEntity.setCep("01310-100");
+        addressEntity.setStreet("Avenida Paulista");
+        addressEntity.setNumber("1000");
+        addressEntity.setCity("São Paulo");
+        addressEntity.setState("SP");
+        addressEntity.setZipCode("01310-100");
 
         stadiumEntity = new StadiumEntity();
         stadiumEntity.setId(1L);

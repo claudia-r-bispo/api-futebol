@@ -42,13 +42,13 @@ class FootballMatchEntityTest {
         StadiumEntity stadium = createTestStadium(1L, "Arena Test");
         LocalDateTime matchTime = LocalDateTime.of(2024, 6, 15, 20, 0);
 
-        // Act - CORRIGIR: A ordem correta dos parâmetros
+        // Act - usando a ordem correta dos parâmetros
         FootballMatch match = new FootballMatch(
                 1L,                // id
                 homeClub,          // homeClub
                 visitorClub,       // clubVisitor
                 stadium,           // stadium
-                matchTime,         // dateTimeDeparture ← LocalDateTime deve vir ANTES dos Integer
+                matchTime,         // dateTimeDeparture
                 2,                 // homeTeamGoals
                 1                  // goalsVisitor
         );
@@ -159,15 +159,15 @@ class FootballMatchEntityTest {
     }
 
     private StadiumEntity createTestStadium(Long id, String name) {
-        // Criar address primeiro
+        // Corrigido para usar setters válidos e campos atuais de AddressEntity
         AddressEntity address = new AddressEntity();
         address.setId(1L);
-        address.setLogradouro("Avenida Paulista");
-        address.setCidade("São Paulo");
-        address.setEstado("SP");
-        address.setCep("01310-100");
+        address.setStreet("Avenida Paulista");
+        address.setNumber("1000");
+        address.setCity("São Paulo");
+        address.setState("SP");
+        address.setZipCode("01310-100");
 
-        // Criar stadium com address
         StadiumEntity stadium = new StadiumEntity();
         stadium.setId(id);
         stadium.setName(name);

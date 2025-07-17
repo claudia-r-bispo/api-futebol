@@ -116,10 +116,11 @@ class FootballMatchMapperTest {
     private StadiumEntity createTestStadium(Long id, String name) {
         AddressEntity address = new AddressEntity();
         address.setId(1L);
-        address.setLogradouro("Avenida Paulista");
-        address.setCidade("São Paulo");
-        address.setEstado("SP");
-        address.setCep("01310-100");
+        address.setStreet("Avenida Paulista");
+        address.setNumber("1000");
+        address.setCity("São Paulo");
+        address.setState("SP");
+        address.setZipCode("01310-100");
 
         StadiumEntity stadium = new StadiumEntity();
         stadium.setId(id);
