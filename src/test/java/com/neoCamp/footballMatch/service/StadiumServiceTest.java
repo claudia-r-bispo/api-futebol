@@ -138,14 +138,14 @@ public class StadiumServiceTest {
 
     @Test
     void testFindById() {
-        // Arrange
+
         Long stadiumId = 1L;
         when(stadiumRepository.findById(stadiumId)).thenReturn(java.util.Optional.of(stadiumEntity));
 
-        // Act
+
         StadiumDTO result = stadiumService.findById(stadiumId);
 
-        // Assert
+
         assertNotNull(result);
         assertEquals("Arena Test", result.getName());
         verify(stadiumRepository).findById(stadiumId);
@@ -153,11 +153,11 @@ public class StadiumServiceTest {
 
     @Test
     void testFindById_NaoEncontrado() {
-        // Arrange
+
         Long stadiumId = 999L;
         when(stadiumRepository.findById(stadiumId)).thenReturn(java.util.Optional.empty());
 
-        // Act & Assert
+
         RuntimeException exception = assertThrows(
                 RuntimeException.class,
                 () -> stadiumService.findById(stadiumId)

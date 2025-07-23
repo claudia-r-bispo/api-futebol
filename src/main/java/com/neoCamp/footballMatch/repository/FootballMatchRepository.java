@@ -11,8 +11,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.UUID;
 
-public interface FootballMatchRepository extends JpaRepository<FootballMatch, Long> {
+public interface FootballMatchRepository extends JpaRepository<FootballMatch, UUID> {
     Page<FootballMatch> findByHomeClubIdOrClubVisitorId(Long homeClubId, Long clubVisitorId, Pageable pageable);
     @Query("""
 SELECT new com.neoCamp.footballMatch.dto.RankingDTO(

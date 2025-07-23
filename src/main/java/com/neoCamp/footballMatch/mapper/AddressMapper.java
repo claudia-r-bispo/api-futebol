@@ -27,7 +27,7 @@ public class AddressMapper {
         dto.setCidade(entity.getCity());
         dto.setEstado(entity.getState());
         dto.setCep(entity.getZipCode());
-        // Não existe setNumero() em AddressDTO, então não setar numero
+
         return dto;
     }
 }

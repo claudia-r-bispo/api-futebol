@@ -4,13 +4,14 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class FootballMatchDTO {
 
-    private Long id;
+    private UUID id;
     private Long homeClubId;
     private Long clubVisitorId;
     private Long stadiumId;
