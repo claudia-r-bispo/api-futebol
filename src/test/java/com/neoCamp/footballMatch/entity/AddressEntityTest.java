@@ -51,7 +51,7 @@ class AddressEntityTest {
                 stadiumEntity
         );
 
-        // Assert
+
         assertNotNull(address);
         assertEquals(1L, address.getId());
         assertEquals("Avenida Paulista", address.getStreet());
@@ -65,52 +65,51 @@ class AddressEntityTest {
     @Test
     @DisplayName("Deve definir e obter ID corretamente")
     void testIdGetterAndSetter() {
-        // Arrange
+
         Long expectedId = 1L;
 
-        // Act
+
         addressEntity.setId(expectedId);
 
-        // Assert
+
         assertEquals(expectedId, addressEntity.getId());
     }
 
     @Test
     @DisplayName("Deve definir e obter street corretamente")
     void testStreetGetterAndSetter() {
-        // Arrange
+
         String expectedStreet = "Rua das Flores, 123";
 
-        // Act
+
         addressEntity.setStreet(expectedStreet);
 
-        // Assert
+
         assertEquals(expectedStreet, addressEntity.getStreet());
     }
 
     @Test
     @DisplayName("Deve definir e obter cidade corretamente")
     void testCityGetterAndSetter() {
-        // Arrange
+
         String expectedCity = "São Paulo";
 
-        // Act
+
         addressEntity.setCity(expectedCity);
 
-        // Assert
+
         assertEquals(expectedCity, addressEntity.getCity());
     }
 
     @Test
     @DisplayName("Deve definir e obter estado corretamente")
     void testStateGetterAndSetter() {
-        // Arrange
+
         String expectedState = "SP";
 
-        // Act
+
         addressEntity.setState(expectedState);
 
-        // Assert
         assertEquals(expectedState, addressEntity.getState());
         assertEquals(2, expectedState.length()); // Verifica tamanho máximo
     }
@@ -118,13 +117,13 @@ class AddressEntityTest {
     @Test
     @DisplayName("Deve definir e obter CEP corretamente")
     void testZipCodeGetterAndSetter() {
-        // Arrange
+
         String expectedZipCode = "01310-100";
 
-        // Act
+
         addressEntity.setZipCode(expectedZipCode);
 
-        // Assert
+
         assertEquals(expectedZipCode, addressEntity.getZipCode());
         assertTrue(expectedZipCode.length() <= 9); // Verifica tamanho máximo
     }
@@ -132,14 +131,14 @@ class AddressEntityTest {
     @Test
     @DisplayName("Deve definir e obter stadium corretamente")
     void testStadiumGetterAndSetter() {
-        // Arrange
+
         stadiumEntity.setId(1L);
         stadiumEntity.setName("Arena Test");
 
-        // Act
+
         addressEntity.setStadium(stadiumEntity);
 
-        // Assert
+
         assertEquals(stadiumEntity, addressEntity.getStadium());
         assertEquals(1L, addressEntity.getStadium().getId());
         assertEquals("Arena Test", addressEntity.getStadium().getName());
@@ -148,7 +147,8 @@ class AddressEntityTest {
     @Test
     @DisplayName("Deve validar relacionamento bidirecional com StadiumEntity")
     void testBidirectionalRelationship() {
-        // Arrange
+
+
         stadiumEntity.setId(1L);
         stadiumEntity.setName("Arena Test");
         stadiumEntity.setUf("SP");
@@ -161,11 +161,11 @@ class AddressEntityTest {
         addressEntity.setState("SP");
         addressEntity.setZipCode("01310-100");
 
-        // Act
+
         stadiumEntity.setAddress(addressEntity);
         addressEntity.setStadium(stadiumEntity);
 
-        // Assert
+
         assertEquals(addressEntity, stadiumEntity.getAddress());
         assertEquals(stadiumEntity, addressEntity.getStadium());
         assertEquals("Arena Test", addressEntity.getStadium().getName());
@@ -206,7 +206,7 @@ class AddressEntityTest {
                 stadiumEntity
         );
 
-        // Act & Assert
+
         assertEquals(address1, address2);
         assertNotEquals(address1, address3);
         assertEquals(address1.hashCode(), address2.hashCode());
@@ -224,10 +224,10 @@ class AddressEntityTest {
         addressEntity.setState("SP");
         addressEntity.setZipCode("01310-100");
 
-        // Act
+
         String toString = addressEntity.toString();
 
-        // Assert
+
         assertNotNull(toString);
         assertTrue(toString.contains("AddressEntity"));
         assertTrue(toString.contains("id=1"));
@@ -241,7 +241,7 @@ class AddressEntityTest {
     @Test
     @DisplayName("Deve lidar com valores null graciosamente")
     void testNullValues() {
-        // Act
+
         addressEntity.setId(null);
         addressEntity.setStreet(null);
         addressEntity.setNumber(null);
@@ -250,7 +250,6 @@ class AddressEntityTest {
         addressEntity.setZipCode(null);
         addressEntity.setStadium(null);
 
-        // Assert
         assertNull(addressEntity.getId());
         assertNull(addressEntity.getStreet());
         assertNull(addressEntity.getNumber());
@@ -263,19 +262,23 @@ class AddressEntityTest {
     @Test
     @DisplayName("Deve validar tamanhos máximos dos campos")
     void testFieldLengthValidation() {
-        // Arrange
+
+
         String longState = "ABC"; // Mais que 2 caracteres
         String longZipCode = "12345-67890"; // Mais que 9 caracteres
 
-        // Act
+
+
         addressEntity.setState("SP"); // Válido
         addressEntity.setZipCode("01310-100"); // Válido
 
-        // Assert
+
+
         assertEquals("SP", addressEntity.getState());
         assertEquals("01310-100", addressEntity.getZipCode());
 
-        // Verifica comprimentos
+
+
         assertTrue(addressEntity.getState().length() <= 2);
         assertTrue(addressEntity.getZipCode().length() <= 9);
     }
@@ -283,13 +286,15 @@ class AddressEntityTest {
     @Test
     @DisplayName("Deve criar endereço completo baseado em ViaCEP")
     void testViaCepBasedAddress() {
-        // Arrange - Simulando dados do ViaCEP
+
+
         String zipCode = "01310-100";
         String street = "Avenida Paulista";
         String city = "São Paulo";
         String state = "SP";
 
-        // Act
+
+
         AddressEntity viaCepAddress = new AddressEntity(
                 1L,
                 street,
@@ -300,14 +305,16 @@ class AddressEntityTest {
                 stadiumEntity
         );
 
-        // Assert
+
+
         assertEquals(zipCode, viaCepAddress.getZipCode());
         assertEquals(street, viaCepAddress.getStreet());
         assertEquals("123", viaCepAddress.getNumber());
         assertEquals(city, viaCepAddress.getCity());
         assertEquals(state, viaCepAddress.getState());
 
-        // Verifica se é um endereço válido para integração
+
+
         assertNotNull(viaCepAddress.getZipCode());
         assertNotNull(viaCepAddress.getStreet());
         assertNotNull(viaCepAddress.getNumber());
@@ -319,17 +326,16 @@ class AddressEntityTest {
     @Test
     @DisplayName("Deve validar diferentes formatos de CEP")
     void testDifferentZipCodeFormats() {
-        // Arrange & Act & Assert
 
-        // CEP com traço
+
         addressEntity.setZipCode("01310-100");
         assertEquals("01310-100", addressEntity.getZipCode());
 
-        // CEP sem traço
+
         addressEntity.setZipCode("01310100");
         assertEquals("01310100", addressEntity.getZipCode());
 
-        // CEP com espaços (simulando input do usuário)
+
         addressEntity.setZipCode(" 01310-100 ");
         assertEquals(" 01310-100 ", addressEntity.getZipCode());
     }

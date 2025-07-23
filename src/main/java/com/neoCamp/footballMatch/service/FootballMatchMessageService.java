@@ -59,12 +59,12 @@ public class FootballMatchMessageService {
 
         footballMatchRepository.save(match);
 
-        // Publicar resultado na fila
+
         PartidaResultadoMessage resultadoMessage = new PartidaResultadoMessage();
         resultadoMessage.setIdPartida(idPartida);
         resultadoMessage.setVencedor(vencedor);
         resultadoMessage.setPontuacoes(pontuacoes);
-        // resultadoMessage.setDataHoraFim(match.getDataHoraFim()); // Adapte conforme seus campos
+        // resultadoMessage.setDataHoraFim(match.getDataHoraFim());
 
         rabbitMQService.publicarResultadoPartida(resultadoMessage);
 
@@ -85,11 +85,7 @@ public class FootballMatchMessageService {
 
     private void mapearEPersistirMatch(FootballMatch match, PartidaInformacaoMessage message) {
         match.setId(message.getIdPartida());
-        // Adapte o mapeamento dos campos do DTO para FootballMatch conforme necessário
-        // Exemplo:
-        // match.setDateTimeDeparture(message.getDataHoraInicio());
-        // match.setStatus(message.getStatus());
-        // ...
+
         footballMatchRepository.save(match);
     }
 }

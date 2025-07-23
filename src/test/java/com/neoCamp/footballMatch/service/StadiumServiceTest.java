@@ -69,14 +69,14 @@ public class StadiumServiceTest {
 
     @Test
     void testCreateEstadio() {
-        // Arrange
+
         when(addressService.createAddressPorCep("01310-100")).thenReturn(addressEntity);
         when(stadiumRepository.save(any(StadiumEntity.class))).thenReturn(stadiumEntity);
 
-        // Act
+
         StadiumDTO result = stadiumService.createEstadio(stadiumDTO);
 
-        // Assert
+
         assertNotNull(result);
         assertEquals("Arena Test", result.getName());
         assertEquals("SP", result.getUf());
@@ -88,10 +88,10 @@ public class StadiumServiceTest {
 
     @Test
     void testCreateEstadio_SemCep_DeveLancarExcecao() {
-        // Arrange
+
         stadiumDTO.setCep(null); // ← Sem CEP
 
-        // Act & Assert
+
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> stadiumService.createEstadio(stadiumDTO)
@@ -99,17 +99,17 @@ public class StadiumServiceTest {
 
         assertEquals("CEP é obrigatório para cadastro do estádio", exception.getMessage());
 
-        // Verificar que os métodos não foram chamados
+
         verify(addressService, never()).createAddressPorCep(any());
         verify(stadiumRepository, never()).save(any());
     }
 
     @Test
     void testCreateEstadio_CepVazio_DeveLancarExcecao() {
-        // Arrange
+
         stadiumDTO.setCep(""); // ← CEP vazio
 
-        // Act & Assert
+
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> stadiumService.createEstadio(stadiumDTO)
@@ -120,16 +120,16 @@ public class StadiumServiceTest {
 
     @Test
     void testUpdateEstadio() {
-        // Arrange
+
         Long stadiumId = 1L;
         when(stadiumRepository.findById(stadiumId)).thenReturn(java.util.Optional.of(stadiumEntity));
         when(addressService.createAddressPorCep("01310-100")).thenReturn(addressEntity);
         when(stadiumRepository.save(any(StadiumEntity.class))).thenReturn(stadiumEntity);
 
-        // Act
+
         StadiumDTO result = stadiumService.updateEstadio(stadiumId, stadiumDTO);
 
-        // Assert
+
         assertNotNull(result);
         verify(stadiumRepository).findById(stadiumId);
         verify(addressService).createAddressPorCep("01310-100");

@@ -25,7 +25,7 @@ public class AddressEntity {
     @JoinColumn(name = "stadium_id")
     private StadiumEntity stadium;
 
-    // Adicionando getter para compatibilidade
+
     public String getCep() {
         return zipCode;
     }

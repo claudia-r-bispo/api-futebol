@@ -23,10 +23,10 @@ public class ViaCepResponse {
     private String ddd;
     private String siafi;
 
-    // Construtores
+
     public ViaCepResponse() {}
 
-    // Getters e Setters
+
     public String getCep() { return cep; }
     public void setCep(String cep) { this.cep = cep; }
 
@@ -57,7 +57,7 @@ public class ViaCepResponse {
     public String getSiafi() { return siafi; }
     public void setSiafi(String siafi) { this.siafi = siafi; }
 
-    // Métodos de validação para futebol
+
     public boolean isValidAddress() {
         return cep != null && !cep.trim().isEmpty() &&
                 logradouro != null && !logradouro.trim().isEmpty();
@@ -106,7 +106,7 @@ public class ViaCepResponse {
             return false;
         }
 
-        // Mapeamento correto de estados para regiões
+
         Map<String, String> estadoParaRegiao = new HashMap<>();
 
         // Norte
@@ -160,27 +160,26 @@ public class ViaCepResponse {
     public int getStadiumSuitabilityScore() {
         int score = 0;
 
-        // Endereço válido: 30 pontos
+
         if (isValidAddress()) {
             score += 30;
         }
 
-        // Estado com tradição no futebol: 25 pontos
         if (isValidStateForFootball()) {
             score += 25;
         }
 
-        // Cidade reconhecida para estádios: 20 pontos
+
         if (isValidCityForStadium()) {
             score += 20;
         }
 
-        // Região consistente: 15 pontos
+
         if (isRegionConsistentWithState()) {
             score += 15;
         }
 
-        // Cidade com estádio da Série A: 10 pontos extras
+
         if (isCityWithSerieAStadium()) {
             score += 10;
         }

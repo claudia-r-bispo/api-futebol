@@ -42,7 +42,7 @@ public class StadiumController {
         return ResponseEntity.ok(response);
     }
 
-    // NOVO: Endpoint para validar CEP
+
     @GetMapping("/validate-cep/{cep}")
     public ResponseEntity<ViaCepResponse> validateCep(@PathVariable String cep) {
         try {

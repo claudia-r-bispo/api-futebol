@@ -11,16 +11,16 @@ class FootballMatchMapperTest {
 
     @Test
     void toEntity_Success() {
-        // Arrange
+
         FootballMatchDTO dto = createFootballMatchDTO();
         ClubEntity homeClub = createTestClub(1L, "São Paulo FC");
         ClubEntity visitorClub = createTestClub(2L, "Corinthians");
         StadiumEntity stadium = createTestStadium(1L, "Arena Test");
 
-        // Act
+
         FootballMatch entity = FootballMatchMapper.toEntity(dto, homeClub, visitorClub, stadium);
 
-        // Assert
+
         assertNotNull(entity);
         assertEquals(dto.getId(), entity.getId());
         assertEquals(dto.getHomeTeamGoals(), entity.getHomeTeamGoals());
@@ -33,27 +33,26 @@ class FootballMatchMapperTest {
 
     @Test
     void toEntity_NullDto_ReturnsNull() {
-        // Arrange
+
         ClubEntity homeClub = createTestClub(1L, "São Paulo FC");
         ClubEntity visitorClub = createTestClub(2L, "Corinthians");
         StadiumEntity stadium = createTestStadium(1L, "Arena Test");
 
-        // Act
+
         FootballMatch entity = FootballMatchMapper.toEntity(null, homeClub, visitorClub, stadium);
 
-        // Assert
+
         assertNull(entity);
     }
 
     @Test
     void toDTO_Success() {
-        // Arrange
+
         FootballMatch entity = createFootballMatchEntity();
 
-        // Act
+
         FootballMatchDTO dto = FootballMatchMapper.toDTO(entity);
 
-        // Assert
         assertNotNull(dto);
         assertEquals(entity.getId(), dto.getId());
         assertEquals(entity.getHomeTeamGoals(), dto.getHomeTeamGoals());
@@ -66,14 +65,14 @@ class FootballMatchMapperTest {
 
     @Test
     void toDTO_NullEntity_ReturnsNull() {
-        // Act
+
         FootballMatchDTO dto = FootballMatchMapper.toDTO(null);
 
-        // Assert
+
         assertNull(dto);
     }
 
-    // Helper Methods - USANDO SETTERS para evitar problemas de construtor
+
     private FootballMatchDTO createFootballMatchDTO() {
         FootballMatchDTO dto = new FootballMatchDTO();
         dto.setId(1L);

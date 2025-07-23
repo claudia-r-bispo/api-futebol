@@ -14,7 +14,7 @@ class StadiumMapperTest {
 
     @Test
     void toEntity_Success() {
-        // Arrange
+
         StadiumDTO dto = new StadiumDTO();
         dto.setId(1L);
         dto.setName("Arena Test");
@@ -31,10 +31,10 @@ class StadiumMapperTest {
         addressDTO.setCep("01310-100");
         dto.setAddress(addressDTO);
 
-        // Act
+
         StadiumEntity entity = StadiumMapper.toEntity(dto);
 
-        // Assert
+
         assertNotNull(entity);
         assertEquals(dto.getId(), entity.getId());
         assertEquals(dto.getName(), entity.getName());
@@ -47,32 +47,32 @@ class StadiumMapperTest {
 
     @Test
     void toEntity_NullDto_ReturnsNull() {
-        // Act
+
         StadiumEntity entity = StadiumMapper.toEntity(null);
 
-        // Assert
+
         assertNull(entity);
     }
 
     @Test
     void toEntity_ActiveNull_DefaultsToTrue() {
-        // Arrange
+
         StadiumDTO dto = new StadiumDTO();
         dto.setName("Arena Test");
         dto.setUf("SP");
         dto.setDateCreation(LocalDate.now());
         dto.setActive(null); // null
 
-        // Act
+
         StadiumEntity entity = StadiumMapper.toEntity(dto);
 
-        // Assert
-        assertTrue(entity.isActive()); // Deve ser true por padrão
+
+        assertTrue(entity.isActive());
     }
 
     @Test
     void toDTO_Success() {
-        // Arrange
+
         AddressEntity addressEntity = new AddressEntity();
         addressEntity.setId(1L);
         addressEntity.setStreet("Avenida Paulista");
@@ -88,10 +88,9 @@ class StadiumMapperTest {
         entity.setActive(true);
         entity.setAddress(addressEntity);
 
-        // Act
+
         StadiumDTO dto = StadiumMapper.toDTO(entity);
 
-        // Assert
         assertNotNull(dto);
         assertEquals(entity.getId(), dto.getId());
         assertEquals(entity.getName(), dto.getName());
@@ -105,16 +104,16 @@ class StadiumMapperTest {
 
     @Test
     void toDTO_NullEntity_ReturnsNull() {
-        // Act
+
         StadiumDTO dto = StadiumMapper.toDTO(null);
 
-        // Assert
+
         assertNull(dto);
     }
 
     @Test
     void toDTO_NullAddress_HandlesGracefully() {
-        // Arrange
+
         StadiumEntity entity = new StadiumEntity();
         entity.setId(1L);
         entity.setName("Arena Test");
@@ -123,10 +122,10 @@ class StadiumMapperTest {
         entity.setActive(true);
         entity.setAddress(null); // Address nulo
 
-        // Act
+
         StadiumDTO dto = StadiumMapper.toDTO(entity);
 
-        // Assert
+
         assertNotNull(dto);
         assertNull(dto.getAddress());
         assertNull(dto.getCep());
@@ -134,7 +133,7 @@ class StadiumMapperTest {
 
     @Test
     void toDto_CallsToDTO() {
-        // Arrange
+
         StadiumEntity entity = new StadiumEntity();
         entity.setId(1L);
         entity.setName("Arena Test");
@@ -142,10 +141,10 @@ class StadiumMapperTest {
         entity.setDateCreation(LocalDate.now());
         entity.setActive(true);
 
-        // Act
+
         StadiumDTO dto = StadiumMapper.toDto(entity);
 
-        // Assert
+
         assertNotNull(dto);
         assertEquals(entity.getId(), dto.getId());
         assertEquals(entity.getName(), dto.getName());

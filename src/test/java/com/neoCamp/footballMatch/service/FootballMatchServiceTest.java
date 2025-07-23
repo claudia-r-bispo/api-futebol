@@ -48,7 +48,7 @@ class FootballMatchServiceTest {
         estadio = new StadiumEntity();
         estadio.setId(100L);
 
-        // Ajuste conforme seu construtor real do DTO!
+
         footballMatchDTO = new FootballMatchDTO(1L, 10L, 20L, 100L, LocalDateTime.now(), 2, 1);
 
         footballMatch = new FootballMatch();

@@ -57,7 +57,6 @@ public class FootballMatchMessageService {
         partida.setVencedor(vencedor);
         partida.setDataHoraFim(java.time.LocalDateTime.now());
 
-        // salvar as pontuações na sua estrutura de dados
 
 
         partida = partidaRepository.save(partida);

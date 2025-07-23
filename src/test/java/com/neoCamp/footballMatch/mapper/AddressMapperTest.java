@@ -19,7 +19,7 @@ class AddressMapperTest {
 
     @BeforeEach
     void setUp() {
-        // Setup AddressDTO
+
         addressDTO = new AddressDTO();
         addressDTO.setId(1L);
         addressDTO.setLogradouro("Avenida Paulista");
@@ -27,7 +27,7 @@ class AddressMapperTest {
         addressDTO.setEstado("SP");
         addressDTO.setCep("01310-100");
 
-        // Setup AddressEntity
+        AddressEntity// Setup
         addressEntity = new AddressEntity();
         addressEntity.setId(1L);
         addressEntity.setStreet("Avenida Paulista");
@@ -39,10 +39,10 @@ class AddressMapperTest {
     @Test
     @DisplayName("Deve converter AddressDTO para AddressEntity corretamente")
     void testToEntity_Success() {
-        // Act
+
         AddressEntity result = AddressMapper.toEntity(addressDTO);
 
-        // Assert
+
         assertNotNull(result);
         assertEquals(addressDTO.getId(), result.getId());
         assertEquals(addressDTO.getLogradouro(), result.getStreet());
@@ -55,20 +55,20 @@ class AddressMapperTest {
     @Test
     @DisplayName("Deve retornar null quando AddressDTO for null no toEntity")
     void testToEntity_NullDto_ReturnsNull() {
-        // Act
+
         AddressEntity result = AddressMapper.toEntity(null);
 
-        // Assert
+
         assertNull(result);
     }
 
     @Test
     @DisplayName("Deve converter AddressEntity para AddressDTO corretamente")
     void testToDto_Success() {
-        // Act
+
         AddressDTO result = AddressMapper.toDto(addressEntity);
 
-        // Assert
+
         assertNotNull(result);
         assertEquals(addressEntity.getId(), result.getId());
         assertEquals(addressEntity.getStreet(), result.getLogradouro());
@@ -80,17 +80,17 @@ class AddressMapperTest {
     @Test
     @DisplayName("Deve retornar null quando AddressEntity for null no toDto")
     void testToDto_NullEntity_ReturnsNull() {
-        // Act
+
         AddressDTO result = AddressMapper.toDto(null);
 
-        // Assert
+
         assertNull(result);
     }
 
     @Test
     @DisplayName("Deve lidar com campos null no AddressDTO")
     void testToEntity_WithNullFields() {
-        // Arrange
+
         AddressDTO dtoWithNulls = new AddressDTO();
         dtoWithNulls.setId(null);
         dtoWithNulls.setLogradouro(null);
@@ -98,10 +98,10 @@ class AddressMapperTest {
         dtoWithNulls.setEstado(null);
         dtoWithNulls.setCep(null);
 
-        // Act
+
         AddressEntity result = AddressMapper.toEntity(dtoWithNulls);
 
-        // Assert
+
         assertNotNull(result);
         assertNull(result.getId());
         assertNull(result.getStreet());
@@ -113,7 +113,7 @@ class AddressMapperTest {
     @Test
     @DisplayName("Deve lidar com campos null no AddressEntity")
     void testToDto_WithNullFields() {
-        // Arrange
+
         AddressEntity entityWithNulls = new AddressEntity();
         entityWithNulls.setId(null);
         entityWithNulls.setStreet(null);
@@ -121,10 +121,10 @@ class AddressMapperTest {
         entityWithNulls.setState(null);
         entityWithNulls.setZipCode(null);
 
-        // Act
+
         AddressDTO result = AddressMapper.toDto(entityWithNulls);
 
-        // Assert
+
         assertNotNull(result);
         assertNull(result.getId());
         assertNull(result.getLogradouro());
@@ -136,18 +136,18 @@ class AddressMapperTest {
     @Test
     @DisplayName("Deve converter dados do ViaCEP corretamente")
     void testToEntity_ViaCepData() {
-        // Arrange - Simulando dados vindos do ViaCEP
+
         AddressDTO viaCepDto = new AddressDTO();
         viaCepDto.setLogradouro("Avenida Paulista");
         viaCepDto.setCidade("São Paulo");
         viaCepDto.setEstado("SP");
         viaCepDto.setCep("01310-100");
-        // ID é null pois vem do ViaCEP
 
-        // Act
+
+
         AddressEntity result = AddressMapper.toEntity(viaCepDto);
 
-        // Assert
+
         assertNotNull(result);
         assertNull(result.getId()); // ID deve ser null pois será gerado pelo banco
         assertEquals("Avenida Paulista", result.getStreet());
@@ -159,14 +159,14 @@ class AddressMapperTest {
     @Test
     @DisplayName("Deve manter independência entre objetos após mapeamento")
     void testToEntity_ObjectIndependence() {
-        // Act
+
         AddressEntity result = AddressMapper.toEntity(addressDTO);
 
-        // Modificar o DTO original
+
         addressDTO.setLogradouro("Rua Augusta");
         addressDTO.setCidade("Rio de Janeiro");
 
-        // Assert
+
         assertNotEquals(addressDTO.getLogradouro(), result.getStreet());
         assertNotEquals(addressDTO.getCidade(), result.getCity());
         assertEquals("Avenida Paulista", result.getStreet()); // Valor original
@@ -176,14 +176,14 @@ class AddressMapperTest {
     @Test
     @DisplayName("Deve manter independência entre objetos após mapeamento toDto")
     void testToDto_ObjectIndependence() {
-        // Act
+
         AddressDTO result = AddressMapper.toDto(addressEntity);
 
-        // Modificar a Entity original
+
         addressEntity.setStreet("Rua Augusta");
         addressEntity.setCity("Rio de Janeiro");
 
-        // Assert
+
         assertNotEquals(addressEntity.getStreet(), result.getLogradouro());
         assertNotEquals(addressEntity.getCity(), result.getCidade());
         assertEquals("Avenida Paulista", result.getLogradouro()); // Valor original
@@ -193,7 +193,7 @@ class AddressMapperTest {
     @Test
     @DisplayName("Deve converter diferentes tipos de logradouro")
     void testToEntity_DifferentLogradouroTypes() {
-        // Arrange
+
         String[] logradouros = {
                 "Avenida Paulista",
                 "Rua das Flores, 123",
@@ -207,10 +207,10 @@ class AddressMapperTest {
         for (String logradouro : logradouros) {
             addressDTO.setLogradouro(logradouro);
 
-            // Act
+
             AddressEntity result = AddressMapper.toEntity(addressDTO);
 
-            // Assert
+
             assertEquals(logradouro, result.getStreet());
         }
     }
@@ -218,7 +218,7 @@ class AddressMapperTest {
     @Test
     @DisplayName("Deve converter diferentes formatos de CEP")
     void testToEntity_DifferentCepFormats() {
-        // Arrange
+
         String[] ceps = {
                 "01310-100",
                 "01310100",
@@ -231,10 +231,10 @@ class AddressMapperTest {
         for (String cep : ceps) {
             addressDTO.setCep(cep);
 
-            // Act
+
             AddressEntity result = AddressMapper.toEntity(addressDTO);
 
-            // Assert
+
             assertEquals(cep, result.getZipCode());
         }
     }
@@ -242,42 +242,42 @@ class AddressMapperTest {
     @Test
     @DisplayName("Deve ignorar relacionamento Stadium no mapeamento")
     void testToEntity_IgnoresStadiumRelationship() {
-        // Arrange
+
         StadiumEntity stadium = new StadiumEntity();
         stadium.setId(1L);
         stadium.setName("Arena Test");
 
         addressEntity.setStadium(stadium);
 
-        // Act
+
         AddressDTO result = AddressMapper.toDto(addressEntity);
 
-        // Assert
+
         assertNotNull(result);
         assertEquals(addressEntity.getId(), result.getId());
         assertEquals(addressEntity.getStreet(), result.getLogradouro());
-        // Stadium não deve aparecer no DTO pois não há campo para isso
+
     }
 
     @Test
     @DisplayName("Deve fazer mapeamento bidirecional correto")
     void testBidirectionalMapping() {
-        // Act - DTO -> Entity -> DTO
+
         AddressEntity entity = AddressMapper.toEntity(addressDTO);
         AddressDTO resultDto = AddressMapper.toDto(entity);
 
-        // Assert
+
         assertEquals(addressDTO.getId(), resultDto.getId());
         assertEquals(addressDTO.getLogradouro(), resultDto.getLogradouro());
         assertEquals(addressDTO.getCidade(), resultDto.getCidade());
         assertEquals(addressDTO.getEstado(), resultDto.getEstado());
         assertEquals(addressDTO.getCep(), resultDto.getCep());
 
-        // Act - Entity -> DTO -> Entity
+
         AddressDTO dto = AddressMapper.toDto(addressEntity);
         AddressEntity resultEntity = AddressMapper.toEntity(dto);
 
-        // Assert
+
         assertEquals(addressEntity.getId(), resultEntity.getId());
         assertEquals(addressEntity.getStreet(), resultEntity.getStreet());
         assertEquals(addressEntity.getCity(), resultEntity.getCity());
@@ -288,7 +288,7 @@ class AddressMapperTest {
     @Test
     @DisplayName("Deve lidar com IDs de diferentes tipos")
     void testDifferentIdTypes() {
-        // Arrange & Act & Assert
+
         Long[] ids = {1L, 0L, 999L, Long.MAX_VALUE, Long.MIN_VALUE};
 
         for (Long id : ids) {
@@ -301,16 +301,16 @@ class AddressMapperTest {
     @Test
     @DisplayName("Deve preservar espaços em branco nos campos")
     void testWhitespacePreservation() {
-        // Arrange
+
         addressDTO.setLogradouro(" Avenida Paulista ");
         addressDTO.setCidade("  São Paulo  ");
         addressDTO.setEstado(" SP ");
         addressDTO.setCep(" 01310-100 ");
 
-        // Act
+
         AddressEntity result = AddressMapper.toEntity(addressDTO);
 
-        // Assert
+
         assertEquals(" Avenida Paulista ", result.getStreet());
         assertEquals("  São Paulo  ", result.getCity());
         assertEquals(" SP ", result.getState());
@@ -320,16 +320,16 @@ class AddressMapperTest {
     @Test
     @DisplayName("Deve lidar com strings vazias")
     void testEmptyStrings() {
-        // Arrange
+
         addressDTO.setLogradouro("");
         addressDTO.setCidade("");
         addressDTO.setEstado("");
         addressDTO.setCep("");
 
-        // Act
+
         AddressEntity result = AddressMapper.toEntity(addressDTO);
 
-        // Assert
+
         assertEquals("", result.getStreet());
         assertEquals("", result.getCity());
         assertEquals("", result.getState());
@@ -339,7 +339,7 @@ class AddressMapperTest {
     @Test
     @DisplayName("Deve funcionar com dados reais de endereços brasileiros")
     void testRealBrazilianAddresses() {
-        // Arrange - Endereços reais para teste
+
         Object[][] realAddresses = {
                 {1L, "Avenida Paulista", "São Paulo", "SP", "01310-100"},
                 {2L, "Rua Oscar Freire", "São Paulo", "SP", "01426-001"},
@@ -349,7 +349,7 @@ class AddressMapperTest {
         };
 
         for (Object[] addressData : realAddresses) {
-            // Arrange
+
             AddressDTO dto = new AddressDTO();
             dto.setId((Long) addressData[0]);
             dto.setLogradouro((String) addressData[1]);
@@ -357,11 +357,11 @@ class AddressMapperTest {
             dto.setEstado((String) addressData[3]);
             dto.setCep((String) addressData[4]);
 
-            // Act
+
             AddressEntity entity = AddressMapper.toEntity(dto);
             AddressDTO resultDto = AddressMapper.toDto(entity);
 
-            // Assert
+
             assertEquals(dto.getId(), resultDto.getId());
             assertEquals(dto.getLogradouro(), resultDto.getLogradouro());
             assertEquals(dto.getCidade(), resultDto.getCidade());

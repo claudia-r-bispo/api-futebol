@@ -47,7 +47,7 @@ public class StadiumService {
                 .orElseThrow(() -> new RuntimeException("Estádio não encontrado com o ID: " + id));
 
         if (dto.getCep() != null && !dto.getCep().trim().isEmpty()) {
-            // ← NOME CORRETO DO MÉTODO
+
             AddressEntity novoEndereco = enderecoService.createAddressPorCep(dto.getCep());
             entity.setAddress(novoEndereco);
         }
@@ -61,7 +61,7 @@ public class StadiumService {
         return StadiumMapper.toDto(saved);
     }
 
-    // ... resto dos métodos permanecem iguais
+
     public StadiumDTO findById(Long id) {
         return stadiumRepository.findById(id)
                 .map(StadiumMapper::toDto)

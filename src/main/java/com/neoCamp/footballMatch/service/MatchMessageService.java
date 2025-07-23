@@ -47,7 +47,7 @@ public class MatchMessageService {
         match.setStatus("FINALIZADA");
         match.setVencedor(winner);
         match.setDataHoraFim(java.time.LocalDateTime.now());
-        // TODO: Save scores to match entity if needed
+
         partidaRepository.save(match);
         PartidaResultadoMessage resultMessage = new PartidaResultadoMessage();
         resultMessage.setIdPartida(matchId);

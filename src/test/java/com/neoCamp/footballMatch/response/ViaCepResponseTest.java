@@ -35,10 +35,10 @@ class ViaCepResponseTest {
             }
             """;
 
-        // Act
+
         ViaCepResponse response = objectMapper.readValue(viaCepJson, ViaCepResponse.class);
 
-        // Assert
+
         assertTrue(response.isValidForStadium());
         assertTrue(response.isValidStateForFootball());
         assertTrue(response.isValidCityForStadium());
@@ -63,10 +63,10 @@ class ViaCepResponseTest {
             }
             """;
 
-        // Act
+
         ViaCepResponse response = objectMapper.readValue(viaCepJson, ViaCepResponse.class);
 
-        // Assert
+
         assertTrue(response.isValidForStadium());
         assertTrue(response.isCityWithSerieAStadium());
         assertEquals(100, response.getStadiumSuitabilityScore());
@@ -75,14 +75,13 @@ class ViaCepResponseTest {
     @Test
     @DisplayName("Deve validar estádio em Porto Alegre - Arena do Grêmio")
     void testValidStadiumPortoAlegre() {
-        // Arrange
+
         viaCepResponse.setCep("91330-001");
         viaCepResponse.setLogradouro("Avenida Padre Leopoldo Brentano");
         viaCepResponse.setCidade("Porto Alegre");
         viaCepResponse.setEstado("RS");
         viaCepResponse.setRegiao("Sul");
 
-        // Assert
         assertTrue(viaCepResponse.isValidForStadium());
         assertTrue(viaCepResponse.isValidStateForFootball());
         assertTrue(viaCepResponse.isCityWithSerieAStadium());
@@ -92,14 +91,14 @@ class ViaCepResponseTest {
     @Test
     @DisplayName("Deve identificar cidade inválida para estádio")
     void testInvalidCityForStadium() {
-        // Arrange - Cidade pequena sem tradição no futebol
+
         viaCepResponse.setCep("12345-678");
         viaCepResponse.setLogradouro("Rua Qualquer");
         viaCepResponse.setCidade("Cidade Pequena Inexistente");
         viaCepResponse.setEstado("SP");
         viaCepResponse.setRegiao("Sudeste");
 
-        // Assert
+
         assertFalse(viaCepResponse.isValidCityForStadium());
         assertFalse(viaCepResponse.isValidForStadium());
         assertTrue(viaCepResponse.getStadiumSuitabilityScore() < 100);
@@ -109,14 +108,14 @@ class ViaCepResponseTest {
     @Test
     @DisplayName("Deve identificar estado sem tradição no futebol")
     void testStateWithoutFootballTradition() {
-        // Arrange - Estado hipotético sem futebol profissional
+
         viaCepResponse.setCep("12345-678");
         viaCepResponse.setLogradouro("Rua Qualquer");
         viaCepResponse.setCidade("Qualquer Cidade");
         viaCepResponse.setEstado("XX"); // Estado inválido
         viaCepResponse.setRegiao("Qualquer");
 
-        // Assert
+
         assertFalse(viaCepResponse.isValidStateForFootball());
         assertFalse(viaCepResponse.isValidForStadium());
         assertTrue(viaCepResponse.getValidationMessage().contains("pouca tradição"));
@@ -125,14 +124,13 @@ class ViaCepResponseTest {
     @Test
     @DisplayName("Deve validar região inconsistente com estado")
     void testInconsistentRegion() {
-        // Arrange - São Paulo com região errada
-        viaCepResponse.setCep("01310-100");
+
         viaCepResponse.setLogradouro("Avenida Paulista");
         viaCepResponse.setCidade("São Paulo");
         viaCepResponse.setEstado("SP");
         viaCepResponse.setRegiao("Norte"); // Região errada para SP
 
-        // Assert
+
         assertTrue(viaCepResponse.isValidAddress());
         assertTrue(viaCepResponse.isValidStateForFootball());
         assertFalse(viaCepResponse.isRegionConsistentWithState());
@@ -142,13 +140,13 @@ class ViaCepResponseTest {
     @Test
     @DisplayName("Deve listar cidades válidas para estado")
     void testValidCitiesForState() {
-        // Arrange
+
         viaCepResponse.setEstado("SP");
 
-        // Act
+
         var cidadesValidas = viaCepResponse.getValidCitiesForCurrentState();
 
-        // Assert
+
         assertFalse(cidadesValidas.isEmpty());
         assertTrue(cidadesValidas.contains("São Paulo"));
         assertTrue(cidadesValidas.contains("Santos"));
@@ -158,9 +156,9 @@ class ViaCepResponseTest {
     @Test
     @DisplayName("Deve calcular score de adequação para estádio")
     void testStadiumSuitabilityScore() {
-        // Arrange - Teste com diferentes cenários
 
-        // Cenário 1: Endereço completo e válido (100 pontos)
+
+
         viaCepResponse.setCep("01310-100");
         viaCepResponse.setLogradouro("Avenida Paulista");
         viaCepResponse.setCidade("São Paulo");
@@ -168,13 +166,13 @@ class ViaCepResponseTest {
         viaCepResponse.setRegiao("Sudeste");
         assertEquals(100, viaCepResponse.getStadiumSuitabilityScore());
 
-        // Cenário 2: Endereço válido mas cidade não reconhecida
+
         viaCepResponse.setCidade("Cidade Desconhecida");
         int score2 = viaCepResponse.getStadiumSuitabilityScore();
         assertTrue(score2 >= 55 && score2 < 100); // 30 + 25 = 55 pontos base
 
-        // Cenário 3: Apenas endereço básico válido
-        viaCepResponse.setEstado("XX"); // Estado inválido
+
+        viaCepResponse.setEstado("XX");
         assertEquals(30, viaCepResponse.getStadiumSuitabilityScore());
     }
 
@@ -222,10 +220,10 @@ class ViaCepResponseTest {
             }
             """;
 
-        // Act
+
         ViaCepResponse response = objectMapper.readValue(jsonRealEstadio, ViaCepResponse.class);
 
-        // Assert
+
         assertTrue(response.isValidForStadium());
         assertEquals(100, response.getStadiumSuitabilityScore());
         assertTrue(response.getValidationMessage().contains("Excelente"));

@@ -26,7 +26,7 @@ class FootballMatchRepositoryTest {
 
     @Test
     void save_FootballMatch_Success() {
-        // Arrange
+
         ClubEntity homeClub = createAndSaveClub("São Paulo FC");
         ClubEntity visitorClub = createAndSaveClub("Corinthians");
         StadiumEntity stadium = createAndSaveStadium("Arena Test");
@@ -39,10 +39,10 @@ class FootballMatchRepositoryTest {
         match.setHomeTeamGoals(2);
         match.setGoalsVisitor(1);
 
-        // Act
+
         FootballMatch savedMatch = footballMatchRepository.save(match);
 
-        // Assert
+
         assertNotNull(savedMatch.getId());
         assertEquals(homeClub.getId(), savedMatch.getHomeClub().getId());
         assertEquals(visitorClub.getId(), savedMatch.getClubVisitor().getId());
@@ -51,7 +51,7 @@ class FootballMatchRepositoryTest {
 
     @Test
     void findById_FootballMatch_Success() {
-        // Arrange
+
         ClubEntity homeClub = createAndSaveClub("Flamengo");
         ClubEntity visitorClub = createAndSaveClub("Vasco");
         StadiumEntity stadium = createAndSaveStadium("Maracanã");
@@ -66,17 +66,17 @@ class FootballMatchRepositoryTest {
 
         FootballMatch savedMatch = footballMatchRepository.save(match);
 
-        // Act
+
         FootballMatch foundMatch = footballMatchRepository.findById(savedMatch.getId()).orElse(null);
 
-        // Assert
+
         assertNotNull(foundMatch);
         assertEquals(savedMatch.getId(), foundMatch.getId());
         assertEquals(3, foundMatch.getHomeTeamGoals());
         assertEquals(0, foundMatch.getGoalsVisitor());
     }
 
-    // Helper Methods
+
     private ClubEntity createAndSaveClub(String name) {
         ClubEntity club = new ClubEntity();
         club.setName(name);
@@ -87,7 +87,7 @@ class FootballMatchRepositoryTest {
     }
 
     private StadiumEntity createAndSaveStadium(String name) {
-        // Criar e salvar address primeiro
+
         AddressEntity address = new AddressEntity();
         address.setStreet("Avenida Paulista");
         address.setNumber("1000");
@@ -96,7 +96,7 @@ class FootballMatchRepositoryTest {
         address.setZipCode("01310-100");
         AddressEntity savedAddress = addressRepository.save(address);
 
-        // Criar e salvar stadium com address
+
         StadiumEntity stadium = new StadiumEntity();
         stadium.setName(name);
         stadium.setUf("SP");
