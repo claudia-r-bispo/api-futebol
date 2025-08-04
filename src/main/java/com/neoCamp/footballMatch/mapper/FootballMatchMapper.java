@@ -1,9 +1,12 @@
 package com.neoCamp.footballMatch.mapper;
 
 import com.neoCamp.footballMatch.dto.FootballMatchDTO;
+import com.neoCamp.footballMatch.dto.FootballMatchDetailsDTO;
 import com.neoCamp.footballMatch.entity.FootballMatch;
 import com.neoCamp.footballMatch.entity.ClubEntity;
 import com.neoCamp.footballMatch.entity.StadiumEntity;
+
+import java.util.UUID;
 
 public class FootballMatchMapper {
 
@@ -34,6 +37,28 @@ public class FootballMatchMapper {
         entity.setGoalsVisitor(dto.getGoalsVisitor());
 
         return entity;
+    }
+
+    public static FootballMatchDetailsDTO toDetailsDto(FootballMatch match) {
+        if (match == null) return null;
+
+        FootballMatchDetailsDTO footballMatchDetailsDTO = new FootballMatchDetailsDTO(
+                match.getId(),
+                match.getHomeClub() != null ? match.getHomeClub().getName() : null,
+                match.getClubVisitor() != null ? match.getClubVisitor().getName() : null,
+                match.getStadium() != null ? match.getStadium().getName() : null,
+                match.getDateTimeDeparture(),
+                match.getHomeTeamGoals(),
+                match.getGoalsVisitor()
+        );
+        return footballMatchDetailsDTO;
+    }
+
+    public FootballMatchDetailsDTO findMatchDetailsById(UUID id) {
+        FootballMatch match = footballMatchRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Partida não encontrada!"));
+
+        return FootballMatchMapper.toDetailsDto(match);
     }
 
     public static FootballMatchDTO toDto(FootballMatch saved) {
