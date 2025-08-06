@@ -3,12 +3,15 @@ package com.neoCamp.footballMatch.mapper;
 import com.neoCamp.footballMatch.dto.StadiumDTO;
 import com.neoCamp.footballMatch.entity.StadiumEntity;
 
+import java.util.UUID;
+
 public class StadiumMapper {
 
     public static StadiumEntity toEntity(StadiumDTO dto) {
         if (dto == null) return null;
+
         StadiumEntity stadiumEntity = new StadiumEntity();
-        stadiumEntity.setId(dto.getId());
+        // Não é necessário definir o ID manualmente, pois é gerado automaticamente
         stadiumEntity.setName(dto.getName());
         stadiumEntity.setUf(dto.getUf());
         stadiumEntity.setDateCreation(dto.getDateCreation());
@@ -21,41 +24,31 @@ public class StadiumMapper {
         return stadiumEntity;
     }
 
-
     public static StadiumDTO toDTO(StadiumEntity stadiumEntity) {
         if (stadiumEntity == null) {
             return null;
-
         }
 
         StadiumDTO stadiumDTO = new StadiumDTO();
-        stadiumDTO.setId(stadiumEntity.getId());
+        // Convertendo UUID para Long (usando o hash do UUID)
+        stadiumDTO.setId(stadiumEntity.getId() != null ?
+                (long) stadiumEntity.getId().hashCode() : null);
+
         stadiumDTO.setName(stadiumEntity.getName());
         stadiumDTO.setUf(stadiumEntity.getUf());
         stadiumDTO.setDateCreation(stadiumEntity.getDateCreation());
         stadiumDTO.setActive(stadiumEntity.isActive());
 
-
         if (stadiumEntity.getAddress() != null) {
             stadiumDTO.setAddress(AddressMapper.toDto(stadiumEntity.getAddress()));
-            stadiumDTO.setCep(stadiumEntity.getAddress().getCep()); // Para facilitar o acesso
+            stadiumDTO.setCep(stadiumEntity.getAddress().getCep());
         }
 
         return stadiumDTO;
     }
 
+    // Método para manter compatibilidade com código existente
     public static StadiumDTO toDto(StadiumEntity saved) {
         return toDTO(saved);
     }
 }
-
-
-
-
-
-
-
-
-
-
-

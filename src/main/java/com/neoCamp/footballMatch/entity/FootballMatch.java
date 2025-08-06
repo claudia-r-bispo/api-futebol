@@ -2,10 +2,10 @@ package com.neoCamp.footballMatch.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
-
 
 @Entity
 @Data
@@ -14,9 +14,10 @@ import java.util.UUID;
 @Table(name = "partida")
 public class FootballMatch {
 
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
     @ManyToOne
@@ -31,15 +32,12 @@ public class FootballMatch {
     @JoinColumn(name = "estadio_id", nullable = false)
     private StadiumEntity stadium;
 
-    @Column(nullable = false)
+    @Column(name = "home_team_goals", nullable = false)
+    private int homeTeamGoals;
+
+    @Column(name = "goals_visitor", nullable = false)
+    private int goalsVisitor;
+
+    @Column(name = "date_time_departure", nullable = false)
     private LocalDateTime dateTimeDeparture;
-
-    @Column(nullable = false)
-    private Integer homeTeamGoals;
-
-    @Column(nullable = false)
-    private Integer goalsVisitor;
-
-
 }
-

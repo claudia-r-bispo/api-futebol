@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/partidas")
 public class FootballMatchController {
@@ -19,24 +21,26 @@ public class FootballMatchController {
 
     @PostMapping
     public ResponseEntity<FootballMatchDTO> createFootballMatch(@RequestBody FootballMatchDTO dto) {
-        FootballMatchDTO response = footballMatchService.createPartida(dto);
+        FootballMatchDTO response = footballMatchService.create(dto);
         return ResponseEntity.status(201).body(response);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<FootballMatchDTO> updateFootballMatch(@PathVariable Long id, @RequestBody FootballMatchDTO dto) {
-        FootballMatchDTO response = footballMatchService.updatePartida(id, dto);
+    public ResponseEntity<FootballMatchDTO> updateFootballMatch(
+            @PathVariable UUID id, 
+            @RequestBody FootballMatchDTO dto) {
+        FootballMatchDTO response = footballMatchService.update(id, dto);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteFootballMatch(@PathVariable Long id) {
-        footballMatchService.removerPartida(id);
+    public ResponseEntity<Void> deleteFootballMatch(@PathVariable UUID id) {
+        footballMatchService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<FootballMatchDTO> getById(@PathVariable Long id) {
+    public ResponseEntity<FootballMatchDTO> getById(@PathVariable UUID id) {
         return ResponseEntity.ok(footballMatchService.findById(id));
     }
 
@@ -45,6 +49,3 @@ public class FootballMatchController {
         return ResponseEntity.ok(footballMatchService.listar(pageable));
     }
 }
-
-
-//listar = list

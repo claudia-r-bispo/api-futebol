@@ -10,19 +10,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/estadios")
-
-
+@RequiredArgsConstructor
 public class StadiumController {
 
     private final StadiumService stadiumService;
     private final ViaCepService viaCepService;
-
-    public StadiumController(StadiumService stadiumService, ViaCepService viaCepService) {
-        this.stadiumService = stadiumService != null ? stadiumService : null;
-        this.viaCepService = viaCepService != null ? viaCepService : null;
-    }
 
     @PostMapping
     public ResponseEntity<StadiumDTO> createStadium(@RequestBody StadiumDTO dto) {
@@ -37,11 +33,18 @@ public class StadiumController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<StadiumDTO> updateStadium(@PathVariable Long id, @RequestBody StadiumDTO dto) {
-        StadiumDTO response = stadiumService.updateEstadio(id, dto);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<StadiumDTO> updateStadium(
+            @PathVariable UUID id,
+            @RequestBody StadiumDTO dto) {
+        try {
+            StadiumDTO response = stadiumService.updateEstadio(id, dto);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
-
 
     @GetMapping("/validate-cep/{cep}")
     public ResponseEntity<ViaCepResponse> validateCep(@PathVariable String cep) {
@@ -54,14 +57,21 @@ public class StadiumController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<StadiumDTO> getById(@PathVariable Long id) {
-        StadiumDTO response = stadiumService.findById(id);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<StadiumDTO> getById(@PathVariable UUID id) {
+        try {
+            StadiumDTO response = stadiumService.findById(id);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping
     public ResponseEntity<Page<StadiumDTO>> list(Pageable pageable) {
-        return ResponseEntity.ok(stadiumService.listar(pageable));
+        try {
+            return ResponseEntity.ok(stadiumService.listar(pageable));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 }
-

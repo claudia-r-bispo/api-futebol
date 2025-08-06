@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.UUID;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
@@ -38,9 +39,14 @@ public class ClubControllerTest {
     }
 
     private ClubDTO getClubDTOStub() {
-        return new ClubDTO(1L, "Corinthians", "SP", LocalDate.of(1910, 9, 1), true);
+        return new ClubDTO(
+                UUID.randomUUID(),
+                "Corinthians",
+                "SP",
+                LocalDate.of(1910, 9, 1),
+                Boolean.TRUE
+        );
     }
-
     @BeforeEach
     void setup() {
         clubServiceMock = Mockito.mock(ClubService.class);

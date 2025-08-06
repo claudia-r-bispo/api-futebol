@@ -2,9 +2,11 @@ package com.neoCamp.footballMatch.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Data
@@ -14,8 +16,10 @@ import java.util.List;
 public class StadiumEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id;
 
     @Column(nullable=false)
     private String name;
@@ -30,11 +34,7 @@ public class StadiumEntity {
     @Column(nullable=false)
     private LocalDate dateCreation;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "address_id", nullable = false)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
     private AddressEntity address;
-
-    @OneToMany(mappedBy = "stadium", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<AddressEntity> addresses;
-
 }

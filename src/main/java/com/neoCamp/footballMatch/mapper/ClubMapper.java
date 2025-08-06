@@ -3,30 +3,32 @@ package com.neoCamp.footballMatch.mapper;
 import com.neoCamp.footballMatch.dto.ClubDTO;
 import com.neoCamp.footballMatch.entity.ClubEntity;
 
+import java.util.UUID;
+
 public class ClubMapper {
 
     public static ClubEntity toEntity(ClubDTO dto) {
         if (dto == null) return null;
 
         boolean active = dto.getActive() != null ? dto.getActive() : true;
-        return new ClubEntity(
-                dto.getId(),
-                dto.getName(),
-                dto.getUf(),
-                dto.getDateCreation(),
-                active
-        );
+        ClubEntity entity = new ClubEntity();
+        entity.setId(dto.getId());
+        entity.setName(dto.getName());
+        entity.setUf(dto.getUf());
+        entity.setDateCreation(dto.getDateCreation());
+        entity.setActive(active);
+        return entity;
     }
 
     public static ClubDTO toDto(ClubEntity entity) {
         if (entity == null) return null;
-        return new ClubDTO(
-                entity.getId(),
-                entity.getName(),
-                entity.getUf(),
-                entity.getDateCreation(),
-                entity.isActive()
-        );
-    }
 
+        ClubDTO dto = new ClubDTO();
+        dto.setId(entity.getId());
+        dto.setName(entity.getName());
+        dto.setUf(entity.getUf());
+        dto.setDateCreation(entity.getDateCreation());
+        dto.setActive(entity.isActive());
+        return dto;
+    }
 }

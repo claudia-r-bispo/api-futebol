@@ -1,12 +1,11 @@
 package com.neoCamp.footballMatch.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
 import lombok.*;
-import jakarta.persistence.Id;
+import org.hibernate.annotations.GenericGenerator;
+
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Entity
 @Data
@@ -14,26 +13,21 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class ClubEntity {
 
+    @Id
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id;
 
+    @Column(nullable=false)
+    private String name;
 
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long id;
+    @Column(nullable=false, length=2)
+    private String uf;
 
-        @Column(nullable=false)
-        private String name;
+    @Column(nullable=false)
+    private LocalDate dateCreation;
 
-        @Column(nullable=false, length=2)
-        private String uf;
-
-        @Column(nullable=false)
-        private LocalDate dateCreation;
-
-        @Column(nullable=false)
-        private boolean active;
-
-
-
-    }
-
-
+    @Column(nullable=false)
+    private boolean active = true;
+}

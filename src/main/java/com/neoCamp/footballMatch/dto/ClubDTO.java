@@ -4,24 +4,25 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class ClubDTO {
 
-    private Long id;
+    private UUID id;
     private String name;
     private String uf;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateCreation;
     private Boolean active;
-    private Long homeClub;
-    private Long clubVisitor;
-    private Long homeClubId;
-    private Long clubVisitorId;
+    private UUID homeClub;
+    private UUID clubVisitor;
+    private UUID homeClubId;
+    private UUID clubVisitorId;
 
-    public ClubDTO(Long id, String name, String uf, LocalDate dateCreation, Boolean active) {
+    public ClubDTO(UUID id, String name, String uf, LocalDate dateCreation, Boolean active) {
         this.id = id;
         this.name = name;
         this.uf = uf;
@@ -33,5 +34,3 @@ public class ClubDTO {
         return active;
     }
 }
-
-

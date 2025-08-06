@@ -2,7 +2,6 @@ package com.neoCamp.footballMatch.service;
 
 import com.neoCamp.footballMatch.entity.AddressEntity;
 import com.neoCamp.footballMatch.entity.StadiumEntity;
-import com.neoCamp.footballMatch.entity.AddressEntity;
 import com.neoCamp.footballMatch.mapper.StadiumMapper;
 import com.neoCamp.footballMatch.repository.StadiumRepository;
 import com.neoCamp.footballMatch.dto.StadiumDTO;
@@ -10,11 +9,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class StadiumService {
 
     private final StadiumRepository stadiumRepository;
-    private final AddressService enderecoService; // ← Nome correto da classe
+    private final AddressService enderecoService;
 
     public StadiumService(StadiumRepository stadiumRepository, AddressService enderecoService) {
         this.stadiumRepository = stadiumRepository;
@@ -27,9 +28,7 @@ public class StadiumService {
         }
 
         try {
-            // ← NOME CORRETO DO MÉTODO
             AddressEntity endereco = enderecoService.createAddressPorCep(dto.getCep());
-
             StadiumEntity entity = StadiumMapper.toEntity(dto);
             entity.setActive(true);
             entity.setAddress(endereco);
@@ -38,16 +37,15 @@ public class StadiumService {
             return StadiumMapper.toDto(saved);
 
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao criar estádio: " + e.getMessage());
+            throw new RuntimeException("Erro ao criar estádio: " + e.getMessage(), e);
         }
     }
 
-    public StadiumDTO updateEstadio(Long id, StadiumDTO dto) {
+    public StadiumDTO updateEstadio(UUID id, StadiumDTO dto) {
         StadiumEntity entity = stadiumRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Estádio não encontrado com o ID: " + id));
 
         if (dto.getCep() != null && !dto.getCep().trim().isEmpty()) {
-
             AddressEntity novoEndereco = enderecoService.createAddressPorCep(dto.getCep());
             entity.setAddress(novoEndereco);
         }
@@ -61,19 +59,19 @@ public class StadiumService {
         return StadiumMapper.toDto(saved);
     }
 
-
-    public StadiumDTO findById(Long id) {
+    public StadiumDTO findById(UUID id) {
         return stadiumRepository.findById(id)
                 .map(StadiumMapper::toDto)
                 .orElseThrow(() -> new RuntimeException("Estádio não encontrado!"));
     }
 
-    public StadiumEntity findEntityById(Long id) {
+    public StadiumEntity findEntityById(UUID id) {
         return stadiumRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Estádio não encontrado!"));
     }
 
     public Page<StadiumDTO> listar(Pageable pageable) {
-        return stadiumRepository.findAll(pageable).map(StadiumMapper::toDto);
+        return stadiumRepository.findAll(pageable)
+                .map(StadiumMapper::toDto);
     }
 }

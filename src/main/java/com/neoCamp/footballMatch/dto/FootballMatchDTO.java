@@ -10,18 +10,14 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FootballMatchDTO {
-
     private UUID id;
-    private Long homeClubId;
-    private Long clubVisitorId;
-    private Long stadiumId;
+    private UUID homeClubId;        // Alterado de Long para UUID
+    private UUID clubVisitorId;     // Alterado de Long para UUID
+    private UUID stadiumId;         // Alterado de Long para UUID
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime dateTimeDeparture;
 
     private Integer homeTeamGoals;
     private Integer goalsVisitor;
-
-
 }
-

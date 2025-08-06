@@ -60,24 +60,24 @@ WHERE p.homeClub.id = :clubeId OR p.clubVisitor.id = :clubeId
 """)
     RetrospectoDTO retrospectoGeral(@Param("clubeId") Long clubeId);
 
-    @Query("""
-SELECT new com.neoCamp.footballMatch.dto.DirectConfrontationDTO(
-    :clubeA,
-    :clubeB,
-    COUNT(p),
-    SUM(CASE WHEN p.homeClub.id = :clubeA AND p.homeTeamGoals > p.goalsVisitor THEN 1
-             WHEN p.clubVisitor.id = :clubeA AND p.goalsVisitor > p.homeTeamGoals THEN 1
-             ELSE 0 END),
-    SUM(CASE WHEN p.homeClub.id = :clubeB AND p.homeTeamGoals > p.goalsVisitor THEN 1
-             WHEN p.clubVisitor.id = :clubeB AND p.goalsVisitor > p.homeTeamGoals THEN 1
-             ELSE 0 END),
-    SUM(CASE WHEN p.homeTeamGoals = p.goalsVisitor THEN 1 ELSE 0 END)
-)
-FROM FootballMatch p
-WHERE (p.homeClub.id = :clubeAId AND p.clubVisitor.id = :clubeBId)
-   OR (p.homeClub.id = :clubeBId AND p.clubVisitor.id = :clubeAId)
-""")
-    DirectConfrontationDTO confrontoDireto(@Param("clubeA") Long clubeA, @Param("clubeB") Long clubeB);
+//    @Query("""
+//SELECT new com.neoCamp.footballMatch.dto.DirectConfrontationDTO(
+//    :clubeA,
+//    :clubeB,
+//    COUNT(p),
+//    SUM(CASE WHEN p.homeClub.id = :clubeA AND p.homeTeamGoals > p.goalsVisitor THEN 1
+//             WHEN p.clubVisitor.id = :clubeA AND p.goalsVisitor > p.homeTeamGoals THEN 1
+//             ELSE 0 END),
+//    SUM(CASE WHEN p.homeClub.id = :clubeB AND p.homeTeamGoals > p.goalsVisitor THEN 1
+//             WHEN p.clubVisitor.id = :clubeB AND p.goalsVisitor > p.homeTeamGoals THEN 1
+//             ELSE 0 END),
+//    SUM(CASE WHEN p.homeTeamGoals = p.goalsVisitor THEN 1 ELSE 0 END)
+//)
+//FROM FootballMatch p
+//WHERE (p.homeClub.id = :clubeAId AND p.clubVisitor.id = :clubeBId)
+//   OR (p.homeClub.id = :clubeBId AND p.clubVisitor.id = :clubeAId)
+//""")
+//    DirectConfrontationDTO confrontoDireto(@Param("clubeA") Long clubeA, @Param("clubeB") Long clubeB);
 
 
 }

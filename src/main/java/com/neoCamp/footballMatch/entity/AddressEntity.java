@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.util.UUID;
 
@@ -13,8 +14,11 @@ import java.util.UUID;
 @AllArgsConstructor
 public class AddressEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(columnDefinition = "BINARY(16)")
     private UUID id;
+
     private String street;
     private String number;
     private String city;
@@ -25,16 +29,7 @@ public class AddressEntity {
     @JoinColumn(name = "stadium_id")
     private StadiumEntity stadium;
 
-
     public String getCep() {
         return zipCode;
-    }
-
-    public StadiumEntity getStadium() {
-        return stadium;
-    }
-
-    public void setStadium(StadiumEntity stadium) {
-        this.stadium = stadium;
     }
 }

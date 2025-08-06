@@ -1,5 +1,6 @@
 package com.neoCamp.footballMatch.dto;
 
+import com.neoCamp.footballMatch.entity.FootballMatch;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,20 +12,20 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FootballMatchDetailsDTO {
-    private UUID id;
-    private UUID homeClubId;
-    private String homeClubName;    // Nome do time mandante
-    private String homeClubLogo;    // Logo do time mandante (se houver)
-    private UUID clubVisitorId;
-    private String clubVisitorName; // Nome do time visitante
-    private String clubVisitorLogo; // Logo do time visitante (se houver)
-    private UUID stadiumId;
+    private UUID id;                // ID da partida
+    private UUID homeClubId;        // ID do clube mandante
+    private String homeClubName;
+    private String homeClubLogo;
+    private UUID clubVisitorId;     // ID do clube visitante
+    private String clubVisitorName;
+    private String clubVisitorLogo;
+    private UUID stadiumId;         // ID do estádio
     private String stadiumName;     // Nome do estádio
     private LocalDateTime dateTimeDeparture;
     private Integer homeTeamGoals;
     private Integer goalsVisitor;
 
-    public static FootballMatchDetailsDTO toDetailsDto(FootballMatch match) {
+    public static FootballMatchDetailsDTO fromEntity(FootballMatch match) {
         if (match == null) {
             return null;
         }
@@ -61,5 +62,4 @@ public class FootballMatchDetailsDTO {
 
         return dto;
     }
-}
 }

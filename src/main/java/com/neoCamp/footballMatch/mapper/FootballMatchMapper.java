@@ -41,30 +41,11 @@ public class FootballMatchMapper {
 
     public static FootballMatchDetailsDTO toDetailsDto(FootballMatch match) {
         if (match == null) return null;
-
-        FootballMatchDetailsDTO footballMatchDetailsDTO = new FootballMatchDetailsDTO(
-                match.getId(),
-                match.getHomeClub() != null ? match.getHomeClub().getName() : null,
-                match.getClubVisitor() != null ? match.getClubVisitor().getName() : null,
-                match.getStadium() != null ? match.getStadium().getName() : null,
-                match.getDateTimeDeparture(),
-                match.getHomeTeamGoals(),
-                match.getGoalsVisitor()
-        );
-        return footballMatchDetailsDTO;
-    }
-
-    public FootballMatchDetailsDTO findMatchDetailsById(UUID id) {
-        FootballMatch match = footballMatchRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Partida não encontrada!"));
-
-        return FootballMatchMapper.toDetailsDto(match);
+        
+        return FootballMatchDetailsDTO.fromEntity(match);
     }
 
     public static FootballMatchDTO toDto(FootballMatch saved) {
-        return toDTO(saved); // ← Reutilizar o método toDTO
+        return toDTO(saved);
     }
 }
-
-
-
