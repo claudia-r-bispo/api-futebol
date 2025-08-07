@@ -164,13 +164,19 @@ public class ClubeServiceTest {
         try (MockedStatic<ClubMapper> clubeMapperMock = mockStatic(ClubMapper.class)) {
             Pageable pageable = PageRequest.of(0, 10);
             Page<ClubEntity> clubeEntities = new PageImpl<>(java.util.List.of(clubEntity));
-            when(clubRepository.findAll(eq(pageable))).thenReturn(clubeEntities);
+            when(clubRepository.findByNameContainingIgnoreCaseAndUfContainingIgnoreCase(
+                eq("Clube"), 
+                eq("SP"), 
+                eq(pageable))
+            ).thenReturn(clubeEntities);
+            
             clubeMapperMock.when(() -> ClubMapper.toDto(any(ClubEntity.class))).thenReturn(clubDTO);
 
             Page<ClubDTO> result = clubService.listClubsWithFilters("Clube", "SP", null, pageable);
 
             assertNotNull(result);
             assertEquals(1, result.getTotalElements());
+            verify(clubRepository).findByNameContainingIgnoreCaseAndUfContainingIgnoreCase("Clube", "SP", pageable);
         }
     }
 }

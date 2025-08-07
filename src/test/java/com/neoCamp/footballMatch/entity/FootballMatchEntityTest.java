@@ -57,9 +57,9 @@ class FootballMatchEntityTest {
                 homeClub,         // homeClub
                 visitorClub,      // clubVisitor
                 stadium,          // stadium
-                matchTime,        // dateTimeDeparture
                 2,                // homeTeamGoals
-                1                 // goalsVisitor
+                1,                // goalsVisitor
+                matchTime         // dateTimeDeparture
         );
 
         assertEquals(testId1, match.getId(), "ID should match");

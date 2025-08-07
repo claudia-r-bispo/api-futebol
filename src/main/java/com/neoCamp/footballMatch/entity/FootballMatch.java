@@ -32,11 +32,11 @@ public class FootballMatch {
     @JoinColumn(name = "estadio_id", nullable = false)
     private StadiumEntity stadium;
 
-    @Column(name = "home_team_goals", nullable = false)
-    private int homeTeamGoals;
+    @Column(name = "home_team_goals")
+    private Integer homeTeamGoals;
 
-    @Column(name = "goals_visitor", nullable = false)
-    private int goalsVisitor;
+    @Column(name = "goals_visitor")
+    private Integer goalsVisitor;
 
     @Column(name = "date_time_departure", nullable = false)
     private LocalDateTime dateTimeDeparture;

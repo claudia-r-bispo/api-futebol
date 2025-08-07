@@ -5,7 +5,9 @@ import com.neoCamp.footballMatch.entity.ClubEntity;
 import com.neoCamp.footballMatch.entity.StadiumEntity;
 import com.neoCamp.footballMatch.entity.FootballMatch;
 import com.neoCamp.footballMatch.mapper.FootballMatchMapper;
+import com.neoCamp.footballMatch.repository.ClubRepository;
 import com.neoCamp.footballMatch.repository.FootballMatchRepository;
+import com.neoCamp.footballMatch.repository.StadiumRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.*;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -26,9 +29,9 @@ class FootballMatchServiceTest {
     @Mock
     private FootballMatchRepository footballMatchRepository;
     @Mock
-    private ClubService clubService;
+    private ClubRepository clubRepository;
     @Mock
-    private StadiumService stadiumService;
+    private StadiumRepository stadiumRepository;
 
     @InjectMocks
     private FootballMatchService footballMatchService;
@@ -42,110 +45,173 @@ class FootballMatchServiceTest {
     @BeforeEach
     void setUp() {
         mandante = new ClubEntity();
-        mandante.setId(10L);
+        mandante.setId(UUID.randomUUID());
         visitante = new ClubEntity();
-        visitante.setId(20L);
+        visitante.setId(UUID.randomUUID());
         estadio = new StadiumEntity();
-        estadio.setId(100L);
+        estadio.setId(UUID.randomUUID());
 
+        footballMatchDTO = createFootballMatchDTO(UUID.randomUUID(), mandante.getId(), visitante.getId(), estadio.getId());
+        footballMatch = createFootballMatch(UUID.randomUUID(), mandante, visitante, estadio);
+    }
 
-        footballMatchDTO = new FootballMatchDTO(1L, 10L, 20L, 100L, LocalDateTime.now(), 2, 1);
+    private FootballMatch createFootballMatch(UUID id, ClubEntity mandante, ClubEntity visitante, StadiumEntity estadio) {
+        FootballMatch partida = new FootballMatch();
+        partida.setId(id);
+        partida.setHomeClub(mandante);
+        partida.setClubVisitor(visitante);
+        partida.setStadium(estadio);
+        partida.setDateTimeDeparture(LocalDateTime.now());
+        partida.setHomeTeamGoals(2);
+        partida.setGoalsVisitor(1);
+        return partida;
+    }
 
-        footballMatch = new FootballMatch();
-        footballMatch.setId(1L);
-        footballMatch.setHomeClub(mandante);
-        footballMatch.setClubVisitor(visitante);
-        footballMatch.setStadium(estadio);
-        footballMatch.setDateTimeDeparture(footballMatchDTO.getDateTimeDeparture());
-        footballMatch.setHomeTeamGoals(footballMatchDTO.getHomeTeamGoals());
-        footballMatch.setGoalsVisitor(footballMatchDTO.getGoalsVisitor());
+    private FootballMatchDTO createFootballMatchDTO(UUID id, UUID mandanteId, UUID visitanteId, UUID estadioId) {
+        FootballMatchDTO dto = new FootballMatchDTO();
+        dto.setId(id);
+        dto.setHomeClubId(mandanteId);
+        dto.setClubVisitorId(visitanteId);
+        dto.setStadiumId(estadioId);
+        dto.setDateTimeDeparture(LocalDateTime.now());
+        dto.setHomeTeamGoals(2);
+        dto.setGoalsVisitor(1);
+        return dto;
     }
 
     @Test
     void testCreatePartida() {
-        when(clubService.findEntityById(10L)).thenReturn(mandante);
-        when(clubService.findEntityById(20L)).thenReturn(visitante);
-        when(stadiumService.findEntityById(100L)).thenReturn(estadio);
+        // Configuração do cenário
+        UUID partidaId = UUID.randomUUID();
+        footballMatch.setId(partidaId);
+        
+        // Configuração dos mocks
+        when(clubRepository.findById(mandante.getId())).thenReturn(Optional.of(mandante));
+        when(clubRepository.findById(visitante.getId())).thenReturn(Optional.of(visitante));
+        when(stadiumRepository.findById(estadio.getId())).thenReturn(Optional.of(estadio));
 
         try (MockedStatic<FootballMatchMapper> mapperMock = mockStatic(FootballMatchMapper.class)) {
-            mapperMock.when(() -> FootballMatchMapper.toEntity(eq(footballMatchDTO), eq(mandante), eq(visitante), eq(estadio))).thenReturn(footballMatch);
-            when(footballMatchRepository.save(any(FootballMatch.class))).thenReturn(footballMatch);
-            mapperMock.when(() -> FootballMatchMapper.toDto(any(FootballMatch.class))).thenReturn(footballMatchDTO);
+            // Configuração do mock do mapper
+            FootballMatch partidaSalva = new FootballMatch();
+            partidaSalva.setId(partidaId);
+            partidaSalva.setHomeClub(mandante);
+            partidaSalva.setClubVisitor(visitante);
+            partidaSalva.setStadium(estadio);
+            partidaSalva.setDateTimeDeparture(footballMatchDTO.getDateTimeDeparture());
+            partidaSalva.setHomeTeamGoals(footballMatchDTO.getHomeTeamGoals());
+            partidaSalva.setGoalsVisitor(footballMatchDTO.getGoalsVisitor());
+            
+            // Configura o mock para retornar a entidade correta quando o mapper for chamado
+            mapperMock.when(() -> FootballMatchMapper.toEntity(any(FootballMatchDTO.class), eq(mandante), eq(visitante), eq(estadio)))
+                    .thenReturn(partidaSalva);
+                    
+            // Configura o mock para retornar a entidade salva
+            when(footballMatchRepository.save(any(FootballMatch.class))).thenReturn(partidaSalva);
+            
+            // Configura o mock para retornar o DTO esperado
+            mapperMock.when(() -> FootballMatchMapper.toDto(partidaSalva)).thenReturn(footballMatchDTO);
 
-            FootballMatchDTO result = footballMatchService.createPartida(footballMatchDTO);
+            // Execução do método a ser testado
+            FootballMatchDTO result = footballMatchService.create(footballMatchDTO);
 
+            // Verificações
             assertNotNull(result);
             assertEquals(footballMatchDTO, result);
 
-            verify(clubService).findEntityById(10L);
-            verify(clubService).findEntityById(20L);
-            verify(stadiumService).findEntityById(100L);
-            verify(footballMatchRepository).save(footballMatch);
+            // Verifica se os métodos foram chamados corretamente
+            verify(clubRepository).findById(mandante.getId());
+            verify(clubRepository).findById(visitante.getId());
+            verify(stadiumRepository).findById(estadio.getId());
+            verify(footballMatchRepository).save(any(FootballMatch.class));
         }
     }
 
     @Test
     void testUpdatePartidaSuccess() {
-        when(footballMatchRepository.findById(1L)).thenReturn(Optional.of(footballMatch));
-        when(clubService.findEntityById(10L)).thenReturn(mandante);
-        when(clubService.findEntityById(20L)).thenReturn(visitante);
-        when(stadiumService.findEntityById(100L)).thenReturn(estadio);
+        // Configuração do cenário
+        UUID partidaId = UUID.randomUUID();
+        footballMatch.setId(partidaId);
+        footballMatch.setHomeClub(mandante);
+        footballMatch.setClubVisitor(visitante);
+        footballMatch.setStadium(estadio);
+        
+        // Configuração dos mocks
+        when(footballMatchRepository.findById(partidaId)).thenReturn(Optional.of(footballMatch));
+        when(clubRepository.findById(mandante.getId())).thenReturn(Optional.of(mandante));
+        when(clubRepository.findById(visitante.getId())).thenReturn(Optional.of(visitante));
+        when(stadiumRepository.findById(estadio.getId())).thenReturn(Optional.of(estadio));
+        when(footballMatchRepository.save(any(FootballMatch.class))).thenReturn(footballMatch);
 
         try (MockedStatic<FootballMatchMapper> mapperMock = mockStatic(FootballMatchMapper.class)) {
-            when(footballMatchRepository.save(any(FootballMatch.class))).thenReturn(footballMatch);
+            // Configuração do mock do mapper
             mapperMock.when(() -> FootballMatchMapper.toDto(any(FootballMatch.class))).thenReturn(footballMatchDTO);
 
-            FootballMatchDTO result = footballMatchService.updatePartida(1L, footballMatchDTO);
+            // Execução do método a ser testado
+            FootballMatchDTO result = footballMatchService.update(partidaId, footballMatchDTO);
 
+            // Verificações
             assertNotNull(result);
             assertEquals(footballMatchDTO, result);
 
-            verify(footballMatchRepository).findById(1L);
-            verify(clubService).findEntityById(10L);
-            verify(clubService).findEntityById(20L);
-            verify(stadiumService).findEntityById(100L);
-            verify(footballMatchRepository).save(footballMatch);
+            // Verifica se os métodos foram chamados corretamente
+            verify(footballMatchRepository).findById(partidaId);
+            verify(clubRepository).findById(mandante.getId());
+            verify(clubRepository).findById(visitante.getId());
+            verify(stadiumRepository).findById(estadio.getId());
+            verify(footballMatchRepository).save(any(FootballMatch.class));
         }
     }
 
     @Test
     void testUpdatePartidaNotFound() {
-        when(footballMatchRepository.findById(1L)).thenReturn(Optional.empty());
-        assertThrows(RuntimeException.class, () -> footballMatchService.updatePartida(1L, footballMatchDTO));
+        when(footballMatchRepository.findById(footballMatch.getId())).thenReturn(Optional.empty());
+        assertThrows(RuntimeException.class, () -> footballMatchService.update(footballMatch.getId(), footballMatchDTO));
     }
 
     @Test
     void testRemoverPartida() {
-        doNothing().when(footballMatchRepository).deleteById(1L);
-        footballMatchService.removerPartida(1L);
-        verify(footballMatchRepository).deleteById(1L);
+        // Configuração do cenário
+        UUID partidaId = UUID.randomUUID();
+        footballMatch.setId(partidaId);
+        
+        // Configuração dos mocks
+        when(footballMatchRepository.findById(partidaId)).thenReturn(Optional.of(footballMatch));
+        doNothing().when(footballMatchRepository).delete(footballMatch);
+        
+        // Execução do método a ser testado
+        footballMatchService.delete(partidaId);
+        
+        // Verifica se os métodos foram chamados corretamente
+        verify(footballMatchRepository).findById(partidaId);
+        verify(footballMatchRepository).delete(footballMatch);
     }
 
     @Test
     void testFindByIdSuccess() {
         try (MockedStatic<FootballMatchMapper> mapperMock = mockStatic(FootballMatchMapper.class)) {
-            when(footballMatchRepository.findById(1L)).thenReturn(Optional.of(footballMatch));
+            when(footballMatchRepository.findById(footballMatch.getId())).thenReturn(Optional.of(footballMatch));
             mapperMock.when(() -> FootballMatchMapper.toDto(footballMatch)).thenReturn(footballMatchDTO);
 
-            FootballMatchDTO result = footballMatchService.findById(1L);
+            FootballMatchDTO result = footballMatchService.findById(footballMatch.getId());
 
             assertNotNull(result);
             assertEquals(footballMatchDTO, result);
 
-            verify(footballMatchRepository).findById(1L);
+            verify(footballMatchRepository).findById(footballMatch.getId());
         }
     }
 
     @Test
     void testFindByIdNotFound() {
-        when(footballMatchRepository.findById(1L)).thenReturn(Optional.empty());
-        assertThrows(RuntimeException.class, () -> footballMatchService.findById(1L));
+        UUID nonExistentId = UUID.randomUUID();
+        when(footballMatchRepository.findById(nonExistentId)).thenReturn(Optional.empty());
+        assertThrows(RuntimeException.class, () -> footballMatchService.findById(nonExistentId));
     }
 
     @Test
     void testFindEntityByIdSuccess() {
-        when(footballMatchRepository.findById(1L)).thenReturn(Optional.of(footballMatch));
-        FootballMatch found = footballMatchService.findEntityById(1L);
+        when(footballMatchRepository.findById(footballMatch.getId())).thenReturn(Optional.of(footballMatch));
+        FootballMatch found = footballMatchService.findEntityById(footballMatch.getId());
 
         assertNotNull(found);
         assertEquals(footballMatch, found);
@@ -153,8 +219,9 @@ class FootballMatchServiceTest {
 
     @Test
     void testFindEntityByIdNotFound() {
-        when(footballMatchRepository.findById(1L)).thenReturn(Optional.empty());
-        assertThrows(RuntimeException.class, () -> footballMatchService.findEntityById(1L));
+        UUID nonExistentId = UUID.randomUUID();
+        when(footballMatchRepository.findById(nonExistentId)).thenReturn(Optional.empty());
+        assertThrows(RuntimeException.class, () -> footballMatchService.findEntityById(nonExistentId));
     }
 
     @Test

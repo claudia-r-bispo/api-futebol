@@ -221,10 +221,10 @@ class AddressEntityTest {
     }
 
     @Test
-    @DisplayName("Deve funcionar toString corretamente")
+    @DisplayName("Deve retornar uma representação em string do endereço")
     void testToString() {
-        // Arrange
-        UUID testId = UUID.randomUUID();
+        // Configuração
+        UUID testId = UUID.fromString("00000000-0000-0000-0000-000000000001");
         addressEntity.setId(testId);
         addressEntity.setStreet("Avenida Paulista");
         addressEntity.setNumber("123");
@@ -232,18 +232,18 @@ class AddressEntityTest {
         addressEntity.setState("SP");
         addressEntity.setZipCode("01310-100");
 
-
+        // Ação
         String toString = addressEntity.toString();
 
-
-        assertNotNull(toString);
-        assertTrue(toString.contains("AddressEntity"));
-        assertTrue(toString.contains("id=1"));
-        assertTrue(toString.contains("street=Avenida Paulista"));
-        assertTrue(toString.contains("number=123"));
-        assertTrue(toString.contains("city=São Paulo"));
-        assertTrue(toString.contains("state=SP"));
-        assertTrue(toString.contains("zipCode=01310-100"));
+        // Verificação
+        assertNotNull(toString, "toString() não deve retornar nulo");
+        assertTrue(toString.contains("AddressEntity("), "Deve conter o nome da classe");
+        assertTrue(toString.contains("id=" + testId), "Deve conter o ID");
+        assertTrue(toString.contains("street=Avenida Paulista"), "Deve conter a rua");
+        assertTrue(toString.contains("number=123"), "Deve conter o número");
+        assertTrue(toString.contains("city=São Paulo"), "Deve conter a cidade");
+        assertTrue(toString.contains("state=SP"), "Deve conter o estado");
+        assertTrue(toString.contains("zipCode=01310-100"), "Deve conter o CEP");
     }
 
     @Test

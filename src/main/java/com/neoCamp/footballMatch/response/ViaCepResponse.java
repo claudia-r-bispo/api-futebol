@@ -147,7 +147,7 @@ public class ViaCepResponse {
         estadoParaRegiao.put("SC", "Sul");
 
         String regiaoCorreta = estadoParaRegiao.get(estado.toUpperCase());
-        return regiaoCorreta != null && regiaoCorreta.equalsIgnoreCase(regiao);
+        return regiaoCorreta != null && regiaoCorreta.equalsIgnoreCase(regiao.trim());
     }
 
     public boolean isValidForStadium() {

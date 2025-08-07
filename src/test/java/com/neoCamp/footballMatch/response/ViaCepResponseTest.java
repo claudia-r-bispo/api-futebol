@@ -124,17 +124,25 @@ class ViaCepResponseTest {
     @Test
     @DisplayName("Deve validar região inconsistente com estado")
     void testInconsistentRegion() {
-
+        // Setup test data
+        viaCepResponse.setCep("01310-100");
         viaCepResponse.setLogradouro("Avenida Paulista");
         viaCepResponse.setCidade("São Paulo");
         viaCepResponse.setEstado("SP");
-        viaCepResponse.setRegiao("Norte"); // Região errada para SP
+        viaCepResponse.setRegiao("Norte"); // Incorrect region for SP (should be Sudeste)
 
-
-        assertTrue(viaCepResponse.isValidAddress());
-        assertTrue(viaCepResponse.isValidStateForFootball());
-        assertFalse(viaCepResponse.isRegionConsistentWithState());
-        assertTrue(viaCepResponse.getValidationMessage().contains("inconsistente"));
+        // Validate the address (only checks cep and logradouro)
+        assertTrue(viaCepResponse.isValidAddress(), "Address should be valid with cep and logradouro");
+        
+        // Validate the state (SP is valid for football)
+        assertTrue(viaCepResponse.isValidStateForFootball(), "SP should be a valid state for football");
+        
+        // Validate the region is inconsistent
+        assertFalse(viaCepResponse.isRegionConsistentWithState(), "Region should be inconsistent with state");
+        
+        // Check the validation message
+        assertTrue(viaCepResponse.getValidationMessage().contains("inconsistente"), 
+                  "Validation message should mention inconsistency");
     }
 
     @Test

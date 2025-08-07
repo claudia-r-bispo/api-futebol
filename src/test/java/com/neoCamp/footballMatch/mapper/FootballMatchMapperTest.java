@@ -5,17 +5,21 @@ import com.neoCamp.footballMatch.entity.*;
 import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FootballMatchMapperTest {
 
     @Test
     void toEntity_Success() {
-
+        UUID homeClubId = UUID.randomUUID();
+        UUID visitorClubId = UUID.randomUUID();
+        UUID stadiumId = UUID.randomUUID();
+        
         FootballMatchDTO dto = createFootballMatchDTO();
-        ClubEntity homeClub = createTestClub(1L, "São Paulo FC");
-        ClubEntity visitorClub = createTestClub(2L, "Corinthians");
-        StadiumEntity stadium = createTestStadium(1L, "Arena Test");
+        ClubEntity homeClub = createTestClub(homeClubId, "São Paulo FC");
+        ClubEntity visitorClub = createTestClub(visitorClubId, "Corinthians");
+        StadiumEntity stadium = createTestStadium(stadiumId, "Arena Test");
 
 
         FootballMatch entity = FootballMatchMapper.toEntity(dto, homeClub, visitorClub, stadium);
@@ -33,10 +37,13 @@ class FootballMatchMapperTest {
 
     @Test
     void toEntity_NullDto_ReturnsNull() {
-
-        ClubEntity homeClub = createTestClub(1L, "São Paulo FC");
-        ClubEntity visitorClub = createTestClub(2L, "Corinthians");
-        StadiumEntity stadium = createTestStadium(1L, "Arena Test");
+        UUID homeClubId = UUID.randomUUID();
+        UUID visitorClubId = UUID.randomUUID();
+        UUID stadiumId = UUID.randomUUID();
+        
+        ClubEntity homeClub = createTestClub(homeClubId, "São Paulo FC");
+        ClubEntity visitorClub = createTestClub(visitorClubId, "Corinthians");
+        StadiumEntity stadium = createTestStadium(stadiumId, "Arena Test");
 
 
         FootballMatch entity = FootballMatchMapper.toEntity(null, homeClub, visitorClub, stadium);
@@ -74,11 +81,16 @@ class FootballMatchMapperTest {
 
 
     private FootballMatchDTO createFootballMatchDTO() {
+        UUID homeClubId = UUID.randomUUID();
+        UUID visitorClubId = UUID.randomUUID();
+        UUID stadiumId = UUID.randomUUID();
+        UUID matchId = UUID.randomUUID();
+        
         FootballMatchDTO dto = new FootballMatchDTO();
-        dto.setId(1L);
-        dto.setHomeClubId(1L);
-        dto.setClubVisitorId(2L);
-        dto.setStadiumId(1L);
+        dto.setId(matchId);
+        dto.setHomeClubId(homeClubId);
+        dto.setClubVisitorId(visitorClubId);
+        dto.setStadiumId(stadiumId);
         dto.setDateTimeDeparture(LocalDateTime.of(2024, 6, 15, 20, 0));
         dto.setHomeTeamGoals(2);
         dto.setGoalsVisitor(1);
@@ -86,12 +98,17 @@ class FootballMatchMapperTest {
     }
 
     private FootballMatch createFootballMatchEntity() {
-        ClubEntity homeClub = createTestClub(1L, "São Paulo FC");
-        ClubEntity visitorClub = createTestClub(2L, "Corinthians");
-        StadiumEntity stadium = createTestStadium(1L, "Arena Test");
+        UUID homeClubId = UUID.randomUUID();
+        UUID visitorClubId = UUID.randomUUID();
+        UUID stadiumId = UUID.randomUUID();
+        UUID matchId = UUID.randomUUID();
+        
+        ClubEntity homeClub = createTestClub(homeClubId, "São Paulo FC");
+        ClubEntity visitorClub = createTestClub(visitorClubId, "Corinthians");
+        StadiumEntity stadium = createTestStadium(stadiumId, "Arena Test");
 
         FootballMatch match = new FootballMatch();
-        match.setId(1L);
+        match.setId(matchId);
         match.setHomeClub(homeClub);
         match.setClubVisitor(visitorClub);
         match.setStadium(stadium);
@@ -102,7 +119,7 @@ class FootballMatchMapperTest {
         return match;
     }
 
-    private ClubEntity createTestClub(Long id, String name) {
+    private ClubEntity createTestClub(UUID id, String name) {
         ClubEntity club = new ClubEntity();
         club.setId(id);
         club.setName(name);
@@ -112,9 +129,9 @@ class FootballMatchMapperTest {
         return club;
     }
 
-    private StadiumEntity createTestStadium(Long id, String name) {
+    private StadiumEntity createTestStadium(UUID id, String name) {
         AddressEntity address = new AddressEntity();
-        address.setId(1L);
+        address.setId(UUID.randomUUID());
         address.setStreet("Avenida Paulista");
         address.setNumber("1000");
         address.setCity("São Paulo");

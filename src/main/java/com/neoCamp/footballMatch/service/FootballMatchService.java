@@ -71,8 +71,8 @@ public class FootballMatchService {
         match.setClubVisitor(visitor);
         match.setStadium(stadium);
         match.setDateTimeDeparture(dto.getDateTimeDeparture());
-        match.setHomeTeamGoals(dto.getHomeTeamGoals() != null ? dto.getHomeTeamGoals() : 0);
-        match.setGoalsVisitor(dto.getGoalsVisitor() != null ? dto.getGoalsVisitor() : 0);
+        match.setHomeTeamGoals(dto.getHomeTeamGoals());
+        match.setGoalsVisitor(dto.getGoalsVisitor());
         
         FootballMatch saved = footballMatchRepository.save(match);
         return FootballMatchMapper.toDto(saved);
@@ -85,8 +85,8 @@ public class FootballMatchService {
         
         // Atualiza os campos necessários
         match.setDateTimeDeparture(dto.getDateTimeDeparture());
-        match.setHomeTeamGoals(dto.getHomeTeamGoals() != null ? dto.getHomeTeamGoals() : 0);
-        match.setGoalsVisitor(dto.getGoalsVisitor() != null ? dto.getGoalsVisitor() : 0);
+        match.setHomeTeamGoals(dto.getHomeTeamGoals());
+        match.setGoalsVisitor(dto.getGoalsVisitor());
         
         // Atualiza as relações se necessário
         if (dto.getHomeClubId() != null && !dto.getHomeClubId().equals(match.getHomeClub().getId())) {

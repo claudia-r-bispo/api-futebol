@@ -15,10 +15,10 @@ class StadiumMapperTest {
 
     @Test
     void toEntity_Success() {
-
+        // Arrange
         StadiumDTO dto = new StadiumDTO();
         UUID stadiumId = UUID.randomUUID();
-        dto.setId(stadiumId);
+        dto.setId(stadiumId); // This ID should not be set in the entity
         dto.setName("Arena Test");
         dto.setUf("SP");
         dto.setDateCreation(LocalDate.of(2024, 1, 1));
@@ -34,18 +34,23 @@ class StadiumMapperTest {
         addressDTO.setCep("01310-100");
         dto.setAddress(addressDTO);
 
-
+        // Act
         StadiumEntity entity = StadiumMapper.toEntity(dto);
 
-
-        assertNotNull(entity);
-        assertEquals(dto.getId(), entity.getId());
-        assertEquals(dto.getName(), entity.getName());
-        assertEquals(dto.getUf(), entity.getUf());
-        assertEquals(dto.getDateCreation(), entity.getDateCreation());
-        assertTrue(entity.isActive());
-        assertNotNull(entity.getAddress());
-        assertEquals("Avenida Paulista", entity.getAddress().getStreet());
+        // Assert
+        assertNotNull(entity, "A entidade não deve ser nula");
+        assertNull(entity.getId(), "O ID não deve ser definido no mapeamento para nova entidade");
+        assertEquals(dto.getName(), entity.getName(), "O nome deve ser mapeado corretamente");
+        assertEquals(dto.getUf(), entity.getUf(), "A UF deve ser mapeada corretamente");
+        assertEquals(dto.getDateCreation(), entity.getDateCreation(), "A data de criação deve ser mapeada corretamente");
+        assertTrue(entity.isActive(), "O estádio deve estar ativo por padrão");
+        
+        // Verifica o endereço
+        assertNotNull(entity.getAddress(), "O endereço não deve ser nulo");
+        assertEquals("Avenida Paulista", entity.getAddress().getStreet(), "A rua do endereço deve ser mapeada corretamente");
+        assertEquals("São Paulo", entity.getAddress().getCity(), "A cidade do endereço deve ser mapeada corretamente");
+        assertEquals("SP", entity.getAddress().getState(), "O estado do endereço deve ser mapeado corretamente");
+        assertEquals("01310-100", entity.getAddress().getZipCode(), "O CEP do endereço deve ser mapeado corretamente");
     }
 
     @Test

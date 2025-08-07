@@ -124,8 +124,6 @@ public class StadiumServiceTest {
         UUID stadiumId = UUID.randomUUID();
         when(stadiumRepository.findById(stadiumId)).thenReturn(Optional.of(stadiumEntity));
         when(stadiumRepository.save(any(StadiumEntity.class))).thenReturn(stadiumEntity);
-        when(stadiumRepository.save(any(StadiumEntity.class))).thenReturn(stadiumEntity);
-
 
         StadiumDTO result = stadiumService.updateEstadio(stadiumId, stadiumDTO);
 
