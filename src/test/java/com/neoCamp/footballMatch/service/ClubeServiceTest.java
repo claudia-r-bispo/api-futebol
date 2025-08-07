@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -36,7 +37,8 @@ public class ClubeServiceTest {
 
     @BeforeEach
     public void setUp() {
-        clubDTO = new ClubDTO(1L, "Clube Teste", "SP", null, true);
+        UUID clubId = UUID.randomUUID();
+        clubDTO = new ClubDTO(clubId, "Clube Teste", "SP", null, true);
         clubEntity = new ClubEntity();
         clubEntity.setId(clubDTO.getId());
         clubEntity.setName(clubDTO.getName());
@@ -63,32 +65,34 @@ public class ClubeServiceTest {
     @Test
     void testUpdateClube() {
         try (MockedStatic<ClubMapper> clubeMapperMock = mockStatic(ClubMapper.class)) {
-            when(clubRepository.findById(1L)).thenReturn(Optional.of(clubEntity));
+            UUID clubId = clubEntity.getId();
+            when(clubRepository.findById(clubId)).thenReturn(Optional.of(clubEntity));
             when(clubRepository.save(any(ClubEntity.class))).thenReturn(clubEntity);
             clubeMapperMock.when(() -> ClubMapper.toDto(any(ClubEntity.class))).thenReturn(clubDTO);
 
-            ClubDTO result = clubService.updateClube(1L, clubDTO);
+            ClubDTO result = clubService.updateClube(clubId, clubDTO);
 
             assertNotNull(result);
             assertEquals(clubDTO, result);
-            verify(clubRepository).findById(1L);
+            verify(clubRepository).findById(clubId);
             verify(clubRepository).save(clubEntity);
         }
     }
 
     @Test
     void testUpdateClubeNotFound() {
-        when(clubRepository.findById(1L)).thenReturn(Optional.empty());
-        assertThrows(EntityNotFoundException.class, () -> clubService.updateClube(1L, clubDTO));
-
+        UUID nonExistentId = UUID.randomUUID();
+        when(clubRepository.findById(nonExistentId)).thenReturn(Optional.empty());
+        assertThrows(EntityNotFoundException.class, () -> clubService.updateClube(nonExistentId, clubDTO));
     }
 
     @Test
     void testInativar() {
-        when(clubRepository.findById(1L)).thenReturn(Optional.of(clubEntity));
+        UUID clubId = clubEntity.getId();
+        when(clubRepository.findById(clubId)).thenReturn(Optional.of(clubEntity));
         when(clubRepository.save(any(ClubEntity.class))).thenReturn(clubEntity);
 
-        clubService.inativar(1L);
+        clubService.inativar(clubId);
 
         assertFalse(clubEntity.isActive());
         verify(clubRepository).save(clubEntity);
@@ -96,17 +100,19 @@ public class ClubeServiceTest {
 
     @Test
     void testInativarNotFound() {
-        when(clubRepository.findById(1L)).thenReturn(Optional.empty());
-        assertThrows(EntityNotFoundException.class, () -> clubService.inativar(1L));
+        UUID nonExistentId = UUID.randomUUID();
+        when(clubRepository.findById(nonExistentId)).thenReturn(Optional.empty());
+        assertThrows(EntityNotFoundException.class, () -> clubService.inativar(nonExistentId));
     }
 
     @Test
     void testFindById() {
         try (MockedStatic<ClubMapper> clubeMapperMock = mockStatic(ClubMapper.class)) {
-            when(clubRepository.findById(1L)).thenReturn(Optional.of(clubEntity));
+            UUID clubId = clubEntity.getId();
+            when(clubRepository.findById(clubId)).thenReturn(Optional.of(clubEntity));
             clubeMapperMock.when(() -> ClubMapper.toDto(clubEntity)).thenReturn(clubDTO);
 
-            ClubDTO result = clubService.findById(1L);
+            ClubDTO result = clubService.findById(clubId);
 
             assertNotNull(result);
             assertEquals(clubDTO, result);
@@ -115,14 +121,16 @@ public class ClubeServiceTest {
 
     @Test
     void testFindByIdNotFound() {
-        when(clubRepository.findById(1L)).thenReturn(Optional.empty());
-        assertThrows(EntityNotFoundException.class, () -> clubService.findById(1L));
+        UUID nonExistentId = UUID.randomUUID();
+        when(clubRepository.findById(nonExistentId)).thenReturn(Optional.empty());
+        assertThrows(EntityNotFoundException.class, () -> clubService.findById(nonExistentId));
     }
 
     @Test
     void testFindEntityById() {
-        when(clubRepository.findById(1L)).thenReturn(Optional.of(clubEntity));
-        ClubEntity result = clubService.findEntityById(1L);
+        UUID clubId = clubEntity.getId();
+        when(clubRepository.findById(clubId)).thenReturn(Optional.of(clubEntity));
+        ClubEntity result = clubService.findEntityById(clubId);
 
         assertNotNull(result);
         assertEquals(clubEntity, result);
@@ -130,8 +138,9 @@ public class ClubeServiceTest {
 
     @Test
     void testFindEntityByIdNotFound() {
-        when(clubRepository.findById(1L)).thenReturn(Optional.empty());
-        assertThrows(EntityNotFoundException.class, () -> clubService.findEntityById(1L));
+        UUID nonExistentId = UUID.randomUUID();
+        when(clubRepository.findById(nonExistentId)).thenReturn(Optional.empty());
+        assertThrows(EntityNotFoundException.class, () -> clubService.findEntityById(nonExistentId));
     }
 
     @Test

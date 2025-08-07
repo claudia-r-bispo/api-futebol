@@ -4,21 +4,23 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.Collections;
+import java.util.UUID;
 
 class StadiumEntityTest {
 
     @Test
     void createStadiumEntity_Success() {
-
+        // Arrange
+        UUID stadiumId = UUID.randomUUID();
         StadiumEntity stadium = new StadiumEntity();
-        stadium.setId(1L);
+        stadium.setId(stadiumId);
         stadium.setName("Arena Test");
         stadium.setUf("SP");
         stadium.setActive(true);
         stadium.setDateCreation(LocalDate.of(2024, 1, 1));
 
-
-        assertEquals(1L, stadium.getId());
+        // Assert
+        assertEquals(stadiumId, stadium.getId());
         assertEquals("Arena Test", stadium.getName());
         assertEquals("SP", stadium.getUf());
         assertTrue(stadium.isActive());
@@ -27,63 +29,73 @@ class StadiumEntityTest {
 
     @Test
     void createStadiumEntity_WithAddress() {
-
+        // Arrange
+        UUID addressId = UUID.randomUUID();
+        UUID stadiumId = UUID.randomUUID();
+        
         AddressEntity address = new AddressEntity();
-        address.setId(1L);
+        address.setId(addressId);
         address.setStreet("Avenida Paulista");
         address.setCity("São Paulo");
         address.setState("SP");
         address.setZipCode("01310-100");
 
-
         StadiumEntity stadium = new StadiumEntity();
-        stadium.setId(1L);
+        stadium.setId(stadiumId);
         stadium.setName("Arena Test");
         stadium.setUf("SP");
         stadium.setActive(true);
         stadium.setDateCreation(LocalDate.of(2024, 1, 1));
         stadium.setAddress(address);
 
-
-        assertEquals(1L, stadium.getId());
+        // Assert
+        assertEquals(stadiumId, stadium.getId());
         assertEquals("Arena Test", stadium.getName());
         assertEquals("SP", stadium.getUf());
         assertTrue(stadium.isActive());
         assertEquals(LocalDate.of(2024, 1, 1), stadium.getDateCreation());
         assertNotNull(stadium.getAddress());
+        assertEquals(addressId, stadium.getAddress().getId());
         assertEquals("Avenida Paulista", stadium.getAddress().getStreet());
         assertEquals("São Paulo", stadium.getAddress().getCity());
+        assertEquals("SP", stadium.getAddress().getState());
+        assertEquals("01310-100", stadium.getAddress().getZipCode());
     }
 
     @Test
     void createStadiumEntity_WithAllArgsConstructor() {
 
+        UUID addressId = UUID.randomUUID();
+        UUID stadiumId = UUID.randomUUID();
+        
         AddressEntity address = new AddressEntity();
+        address.setId(addressId);
         address.setStreet("Avenida Paulista");
         address.setCity("São Paulo");
         address.setState("SP");
         address.setZipCode("01310-100");
 
-
         StadiumEntity stadium = new StadiumEntity(
-                1L,                          // id
+                stadiumId,                          // id
                 "Arena Test",               // name
                 "SP",                       // uf
                 true,                        // active
                 LocalDate.of(2024, 1, 1),    // dateCreation
-                address,                     // address
-                Collections.emptyList()      // addresses
+                address                      // address
         );
 
 
-        assertEquals(1L, stadium.getId());
+        assertEquals(stadiumId, stadium.getId());
         assertEquals("Arena Test", stadium.getName());
         assertEquals("SP", stadium.getUf());
         assertTrue(stadium.isActive());
         assertEquals(LocalDate.of(2024, 1, 1), stadium.getDateCreation());
         assertNotNull(stadium.getAddress());
+        assertEquals(addressId, stadium.getAddress().getId());
         assertEquals("Avenida Paulista", stadium.getAddress().getStreet());
         assertEquals("São Paulo", stadium.getAddress().getCity());
+        assertEquals("SP", stadium.getAddress().getState());
+        assertEquals("01310-100", stadium.getAddress().getZipCode());
     }
 
     @Test
@@ -101,16 +113,16 @@ class StadiumEntityTest {
 
         StadiumEntity stadium = new StadiumEntity();
         LocalDate testDate = LocalDate.of(2023, 6, 15);
+        UUID stadiumId = UUID.randomUUID();
 
-
-        stadium.setId(2L);
+        stadium.setId(stadiumId);
         stadium.setName("Estádio do Morumbi");
         stadium.setUf("SP");
         stadium.setActive(false);
         stadium.setDateCreation(testDate);
 
 
-        assertEquals(2L, stadium.getId());
+        assertEquals(stadiumId, stadium.getId());
         assertEquals("Estádio do Morumbi", stadium.getName());
         assertEquals("SP", stadium.getUf());
         assertFalse(stadium.isActive());
@@ -129,34 +141,33 @@ class StadiumEntityTest {
     }
 
     @Test
-    void stadiumEntity_EqualsAndHashCode() {
-
-        AddressEntity address1 = new AddressEntity();
-        address1.setId(1L);
-
-        AddressEntity address2 = new AddressEntity();
-        address2.setId(1L);
-
+    void testEqualsAndHashCode() {
+        // Arrange
+        UUID id1 = UUID.randomUUID();
+        UUID id2 = UUID.randomUUID();
+        
         StadiumEntity stadium1 = new StadiumEntity();
-        stadium1.setId(1L);
-        stadium1.setName("Arena Test");
-        stadium1.setAddress(address1);
-
+        stadium1.setId(id1);
+        
         StadiumEntity stadium2 = new StadiumEntity();
-        stadium2.setId(1L);
-        stadium2.setName("Arena Test");
-        stadium2.setAddress(address2);
-
-
+        stadium2.setId(id1);
+        
+        StadiumEntity stadium3 = new StadiumEntity();
+        stadium3.setId(id2);
+        
+        // Assert
         assertEquals(stadium1, stadium2);
         assertEquals(stadium1.hashCode(), stadium2.hashCode());
+        assertNotEquals(stadium1, stadium3);
+        assertNotEquals(stadium1, null);
+        assertNotEquals(stadium1, new Object());
     }
 
     @Test
     void stadiumEntity_ToString() {
 
         StadiumEntity stadium = new StadiumEntity();
-        stadium.setId(1L);
+        stadium.setId(UUID.randomUUID());
         stadium.setName("Arena Test");
         stadium.setUf("SP");
 

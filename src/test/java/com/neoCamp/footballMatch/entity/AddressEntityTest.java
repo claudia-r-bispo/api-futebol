@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -40,9 +41,12 @@ class AddressEntityTest {
     @Test
     @DisplayName("Deve criar AddressEntity com construtor completo")
     void testAllArgsConstructor() {
+        // Arrange
+        UUID id = UUID.randomUUID();
+        
         // Act
         AddressEntity address = new AddressEntity(
-                1L,
+                id,
                 "Avenida Paulista",
                 "123",
                 "São Paulo",
@@ -53,7 +57,7 @@ class AddressEntityTest {
 
 
         assertNotNull(address);
-        assertEquals(1L, address.getId());
+        assertEquals(id, address.getId());
         assertEquals("Avenida Paulista", address.getStreet());
         assertEquals("123", address.getNumber());
         assertEquals("São Paulo", address.getCity());
@@ -66,7 +70,7 @@ class AddressEntityTest {
     @DisplayName("Deve definir e obter ID corretamente")
     void testIdGetterAndSetter() {
 
-        Long expectedId = 1L;
+        UUID expectedId = UUID.randomUUID();
 
 
         addressEntity.setId(expectedId);
@@ -132,7 +136,7 @@ class AddressEntityTest {
     @DisplayName("Deve definir e obter stadium corretamente")
     void testStadiumGetterAndSetter() {
 
-        stadiumEntity.setId(1L);
+        stadiumEntity.setId(UUID.randomUUID());
         stadiumEntity.setName("Arena Test");
 
 
@@ -140,7 +144,7 @@ class AddressEntityTest {
 
 
         assertEquals(stadiumEntity, addressEntity.getStadium());
-        assertEquals(1L, addressEntity.getStadium().getId());
+        assertEquals(stadiumEntity.getId(), addressEntity.getStadium().getId());
         assertEquals("Arena Test", addressEntity.getStadium().getName());
     }
 
@@ -149,13 +153,13 @@ class AddressEntityTest {
     void testBidirectionalRelationship() {
 
 
-        stadiumEntity.setId(1L);
+        stadiumEntity.setId(UUID.randomUUID());
         stadiumEntity.setName("Arena Test");
         stadiumEntity.setUf("SP");
         stadiumEntity.setActive(true);
         stadiumEntity.setDateCreation(LocalDate.now());
 
-        addressEntity.setId(1L);
+        addressEntity.setId(UUID.randomUUID());
         addressEntity.setStreet("Avenida Paulista");
         addressEntity.setCity("São Paulo");
         addressEntity.setState("SP");
@@ -177,7 +181,7 @@ class AddressEntityTest {
     void testEqualsAndHashCode() {
         // Arrange
         AddressEntity address1 = new AddressEntity(
-                1L,
+                UUID.randomUUID(),
                 "Avenida Paulista",
                 "123",
                 "São Paulo",

@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Collections;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -31,56 +32,61 @@ public class FootballMatchControllerTest {
     private FootballMatchController footballMatchController;
 
     private FootballMatchDTO footballMatchDTO;
+    private UUID testId;
+    private UUID homeClubId;
+    private UUID clubVisitorId;
+    private UUID stadiumId;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        this.footballMatchDTO = new FootballMatchDTO(1L, 1L, 2L, 2L, java.time.LocalDateTime.now(), 1, 2);
+        testId = UUID.randomUUID();
+        homeClubId = UUID.randomUUID();
+        clubVisitorId = UUID.randomUUID();
+        stadiumId = UUID.randomUUID();
+        this.footballMatchDTO = new FootballMatchDTO(testId, homeClubId, clubVisitorId, stadiumId, java.time.LocalDateTime.now(), 1, 2);
     }
 
     @Test
     void testCreatePartida() {
-        when(footballMatchService.createPartida(any(FootballMatchDTO.class)))
-            .thenReturn(footballMatchDTO);
+        when(footballMatchService.create(any(FootballMatchDTO.class)))
+                .thenReturn(footballMatchDTO);
 
         ResponseEntity<FootballMatchDTO> response = footballMatchController.createFootballMatch(footballMatchDTO);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        verify(footballMatchService).createPartida(any(FootballMatchDTO.class));
+        verify(footballMatchService).create(any(FootballMatchDTO.class));
     }
 
     @Test
     void testUpdateFootballMatch() {
-        Long id = 1L;
-        when(footballMatchService.updatePartida(eq(id), any(FootballMatchDTO.class)))
+        when(footballMatchService.update(eq(testId), any(FootballMatchDTO.class)))
             .thenReturn(footballMatchDTO);
 
-        ResponseEntity<FootballMatchDTO> response = footballMatchController.updateFootballMatch(id, footballMatchDTO);
+        ResponseEntity<FootballMatchDTO> response = footballMatchController.updateFootballMatch(testId, footballMatchDTO);
 
         assertEquals(200, response.getStatusCodeValue());
         assertEquals(footballMatchDTO, response.getBody());
-        verify(footballMatchService).updatePartida(any(Long.class), any(FootballMatchDTO.class));
+        verify(footballMatchService).update(eq(testId), any(FootballMatchDTO.class));
     }
 
     @Test
     void testDeleteFootballMatch() {
-        Long id = 1L;
-        ResponseEntity<Void> response = footballMatchController.deleteFootballMatch(id);
+        ResponseEntity<Void> response = footballMatchController.deleteFootballMatch(testId);
 
         assertEquals(204, response.getStatusCodeValue());
-        verify(footballMatchService).removerPartida(eq(id));
+        verify(footballMatchService).delete(eq(testId));
     }
 
     @Test
     void testGetById() {
-        Long id = 1L;
-        when(footballMatchService.findById(eq(id)))
+        when(footballMatchService.findById(eq(testId)))
             .thenReturn(footballMatchDTO);
 
-        ResponseEntity<FootballMatchDTO> response = footballMatchController.getById(id);
+        ResponseEntity<FootballMatchDTO> response = footballMatchController.getById(testId);
 
         assertEquals(200, response.getStatusCodeValue());
         assertEquals(footballMatchDTO, response.getBody());
-        verify(footballMatchService).findById(eq(id));
+        verify(footballMatchService).findById(eq(testId));
     }
     @Test
     void testList() {

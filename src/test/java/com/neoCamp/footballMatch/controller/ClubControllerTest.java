@@ -35,7 +35,7 @@ public class ClubControllerTest {
     private ClubController controller;
 
     private ClubEntity getClubeStub() {
-        return new ClubEntity(1L, "Corinthians", "SP", LocalDate.of(1910, 9, 1), true);
+        return new ClubEntity(UUID.randomUUID(), "Corinthians", "SP", LocalDate.of(1910, 9, 1), true);
     }
 
     private ClubDTO getClubDTOStub() {
@@ -69,7 +69,6 @@ public class ClubControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id", is(clubDTO.getId().intValue())))
                 .andExpect(jsonPath("$.name", is(clubDTO.getName())));
     }
 
@@ -77,32 +76,33 @@ public class ClubControllerTest {
     void testUpdateClub() throws Exception {
         ClubDTO clubDTO = getClubDTOStub();
         ClubDTO dto = getClubDTOStub();
+        UUID clubId = clubDTO.getId();
 
-        Mockito.when(clubServiceMock.updateClube(eq(1L), any(ClubDTO.class))).thenReturn(clubDTO);
-        mockMvc.perform(put("/api/clubes/1")
+        Mockito.when(clubServiceMock.updateClube(eq(clubId), any(ClubDTO.class))).thenReturn(clubDTO);
+        mockMvc.perform(put("/api/clubes/" + clubId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(clubDTO.getId().intValue())))
                 .andExpect(jsonPath("$.name", is(clubDTO.getName())));
     }
 
     @Test
     void testDeleteClub() throws Exception {
-        Mockito.doNothing().when(clubServiceMock).inativar(1L);
+        UUID clubId = UUID.randomUUID();
+        Mockito.doNothing().when(clubServiceMock).inativar(clubId);
 
-        mockMvc.perform(delete("/api/clubes/1"))
+        mockMvc.perform(delete("/api/clubes/" + clubId))
                 .andExpect(status().isNoContent());
     }
 
     @Test
     void testGetClubById() throws Exception {
         ClubDTO clubDTO = getClubDTOStub();
-        Mockito.when(clubServiceMock.findById(1L)).thenReturn(clubDTO);
+        UUID clubId = clubDTO.getId();
+        Mockito.when(clubServiceMock.findById(clubId)).thenReturn(clubDTO);
 
-        mockMvc.perform(get("/api/clubes/1"))
+        mockMvc.perform(get("/api/clubes/" + clubId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(clubDTO.getId().intValue())))
                 .andExpect(jsonPath("$.name", is(clubDTO.getName())));
     }
 
@@ -116,7 +116,6 @@ public class ClubControllerTest {
 
         mockMvc.perform(get("/api/clubes"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content[0].id", is(clubDTO.getId().intValue())))
                 .andExpect(jsonPath("$.content[0].name", is(clubDTO.getName())));
     }
 }

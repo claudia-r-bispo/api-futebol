@@ -7,6 +7,7 @@ import com.neoCamp.footballMatch.entity.AddressEntity;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,7 +17,8 @@ class StadiumMapperTest {
     void toEntity_Success() {
 
         StadiumDTO dto = new StadiumDTO();
-        dto.setId(1L);
+        UUID stadiumId = UUID.randomUUID();
+        dto.setId(stadiumId);
         dto.setName("Arena Test");
         dto.setUf("SP");
         dto.setDateCreation(LocalDate.of(2024, 1, 1));
@@ -24,7 +26,8 @@ class StadiumMapperTest {
         dto.setActive(true);
 
         AddressDTO addressDTO = new AddressDTO();
-        addressDTO.setId(1L);
+        UUID addressId = UUID.randomUUID();
+        addressDTO.setId(addressId);
         addressDTO.setLogradouro("Avenida Paulista");
         addressDTO.setCidade("São Paulo");
         addressDTO.setEstado("SP");
@@ -74,14 +77,15 @@ class StadiumMapperTest {
     void toDTO_Success() {
 
         AddressEntity addressEntity = new AddressEntity();
-        addressEntity.setId(1L);
+        UUID addressId = UUID.randomUUID();
+        addressEntity.setId(addressId);
         addressEntity.setStreet("Avenida Paulista");
         addressEntity.setCity("São Paulo");
         addressEntity.setState("SP");
         addressEntity.setZipCode("01310-100");
 
         StadiumEntity entity = new StadiumEntity();
-        entity.setId(1L);
+        entity.setId(UUID.randomUUID());
         entity.setName("Arena Test");
         entity.setUf("SP");
         entity.setDateCreation(LocalDate.of(2024, 1, 1));
@@ -115,7 +119,7 @@ class StadiumMapperTest {
     void toDTO_NullAddress_HandlesGracefully() {
 
         StadiumEntity entity = new StadiumEntity();
-        entity.setId(1L);
+        entity.setId(UUID.randomUUID());
         entity.setName("Arena Test");
         entity.setUf("SP");
         entity.setDateCreation(LocalDate.now());
@@ -135,7 +139,7 @@ class StadiumMapperTest {
     void toDto_CallsToDTO() {
 
         StadiumEntity entity = new StadiumEntity();
-        entity.setId(1L);
+        entity.setId(UUID.randomUUID());
         entity.setName("Arena Test");
         entity.setUf("SP");
         entity.setDateCreation(LocalDate.now());

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +21,7 @@ public class AddressService {
         return addressRepository.save(address);
     }
 
-    public Optional<AddressEntity> findById(Long id) {
+    public Optional<AddressEntity> findById(UUID id) {
         return addressRepository.findById(id);
     }
 
@@ -28,7 +29,7 @@ public class AddressService {
         return addressRepository.findAll();
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(UUID id) {
         addressRepository.deleteById(id);
     }
 

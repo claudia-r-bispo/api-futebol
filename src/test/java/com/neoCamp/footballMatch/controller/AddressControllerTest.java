@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
@@ -35,10 +36,16 @@ class AddressControllerTest {
 
     private AddressEntity address;
 
+    private UUID testId;
+    private UUID nonExistentId;
+
     @BeforeEach
     void setUp() {
+        testId = UUID.randomUUID();
+        nonExistentId = UUID.randomUUID();
+        
         address = new AddressEntity();
-        address.setId(1L);
+        address.setId(testId);
         address.setStreet("Rua Teste");
         address.setNumber("123");
         address.setCity("Cidade");
@@ -53,22 +60,22 @@ class AddressControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(address)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.id").value(testId.toString()))
                 .andExpect(jsonPath("$.street").value("Rua Teste"));
     }
 
     @Test
     void testGetByIdFound() throws Exception {
-        when(addressService.findById(1L)).thenReturn(Optional.of(address));
-        mockMvc.perform(get("/api/addresses/1"))
+        when(addressService.findById(testId)).thenReturn(Optional.of(address));
+        mockMvc.perform(get("/api/addresses/" + testId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1L));
+                .andExpect(jsonPath("$.id").value(testId.toString()));
     }
 
     @Test
     void testGetByIdNotFound() throws Exception {
-        when(addressService.findById(2L)).thenReturn(Optional.empty());
-        mockMvc.perform(get("/api/addresses/2"))
+        when(addressService.findById(nonExistentId)).thenReturn(Optional.empty());
+        mockMvc.perform(get("/api/addresses/" + nonExistentId))
                 .andExpect(status().isNotFound());
     }
 
@@ -77,13 +84,13 @@ class AddressControllerTest {
         when(addressService.findAll()).thenReturn(Arrays.asList(address));
         mockMvc.perform(get("/api/addresses"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1L));
+                .andExpect(jsonPath("$[0].id").value(testId.toString()));
     }
 
     @Test
     void testDelete() throws Exception {
-        doNothing().when(addressService).deleteById(1L);
-        mockMvc.perform(delete("/api/addresses/1"))
+        doNothing().when(addressService).deleteById(testId);
+        mockMvc.perform(delete("/api/addresses/" + testId))
                 .andExpect(status().isNoContent());
     }
 }

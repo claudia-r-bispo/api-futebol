@@ -2,21 +2,22 @@ package com.neoCamp.footballMatch.dto;
 
 import lombok.*;
 
-import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import java.time.LocalDate;
+import java.util.UUID;
 
-    @Data
-    @NoArgsConstructor @AllArgsConstructor
-    public class StadiumDTO {
-
-        private Long id;
+@Data
+@NoArgsConstructor 
+@AllArgsConstructor
+public class StadiumDTO {
+    private UUID id;
         private String name;
         private String uf;
         @JsonFormat(pattern = "yyyy-MM-dd")
         private LocalDate dateCreation;
-        private Long clubVisitor;
-        private Long homeClub;
+        private UUID clubVisitor;
+        private UUID homeClub;
         private Integer homeTeamGoals;
         private Integer goalsVisitor;
 

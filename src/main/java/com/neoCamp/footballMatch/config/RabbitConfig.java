@@ -14,12 +14,22 @@ import org.springframework.retry.support.RetryTemplate;
 
 import static org.springframework.amqp.core.QueueBuilder.durable;
 
-@Configuration // ← ADICIONADO
+@Configuration
 public class RabbitConfig {
 
+    // Filas principais
     public static final String PARTIDA_INFORMACOES_QUEUE = "partida.informacoes";
     public static final String PARTIDA_RESULTADO_QUEUE = "partida.resultado";
+    
+    // DLQs
+    public static final String PARTIDA_INFORMACOES_DLQ = "partida.informacoes.dlq";
+    public static final String PARTIDA_RESULTADO_DLQ = "partida.resultado.dlq";
+    
+    // Exchange
     public static final String PARTIDA_EXCHANGE = "partida.exchange";
+    public static final String DLX_EXCHANGE = "dlx.exchange";
+    
+    // Routing Keys
     public static final String PARTIDA_INFORMACOES_ROUTING_KEY = "partida.informacoes";
     public static final String PARTIDA_RESULTADO_ROUTING_KEY = "partida.resultado";
 
@@ -31,14 +41,27 @@ public class RabbitConfig {
     }
 
     @Bean
+    public DirectExchange dlxExchange() {
+        return ExchangeBuilder.directExchange(DLX_EXCHANGE)
+                .durable(true)
+                .build();
+    }
+
+    // Configuração da fila de informações com DLQ e TTL
+    @Bean
     public Queue partidaInformacoesQueue() {
-        return durable(PARTIDA_INFORMACOES_QUEUE).build();
+        return QueueBuilder.durable(PARTIDA_INFORMACOES_QUEUE)
+                .withArgument("x-dead-letter-exchange", DLX_EXCHANGE)
+                .withArgument("x-dead-letter-routing-key", PARTIDA_INFORMACOES_DLQ)
+                .withArgument("x-message-ttl", 86400000) // 24 horas em milissegundos
+                .build();
     }
 
     @Bean
-    public Queue partidaResultadoQueue() {
-        // CORRIGIDO: estava usando PARTIDA_INFORMACOES_QUEUE
-        return durable(PARTIDA_RESULTADO_QUEUE).build();
+    public Queue partidaInformacoesDlq() {
+        return QueueBuilder.durable(PARTIDA_INFORMACOES_DLQ)
+                .withArgument("x-message-ttl", 172800000) // 48 horas em milissegundos
+                .build();
     }
 
     @Bean
@@ -50,11 +73,44 @@ public class RabbitConfig {
     }
 
     @Bean
+    public Binding partidaInformacoesDlqBinding() {
+        return BindingBuilder
+                .bind(partidaInformacoesDlq())
+                .to(dlxExchange())
+                .with(PARTIDA_INFORMACOES_DLQ);
+    }
+
+    // Configuração da fila de resultado com DLQ e TTL
+    @Bean
+    public Queue partidaResultadoQueue() {
+        return QueueBuilder.durable(PARTIDA_RESULTADO_QUEUE)
+                .withArgument("x-dead-letter-exchange", DLX_EXCHANGE)
+                .withArgument("x-dead-letter-routing-key", PARTIDA_RESULTADO_DLQ)
+                .withArgument("x-message-ttl", 86400000) // 24 horas em milissegundos
+                .build();
+    }
+
+    @Bean
+    public Queue partidaResultadoDlq() {
+        return QueueBuilder.durable(PARTIDA_RESULTADO_DLQ)
+                .withArgument("x-message-ttl", 172800000) // 48 horas em milissegundos
+                .build();
+    }
+
+    @Bean
     public Binding partidaResultadoBinding() {
         return BindingBuilder
                 .bind(partidaResultadoQueue())
                 .to(partidaExchange())
                 .with(PARTIDA_RESULTADO_ROUTING_KEY);
+    }
+
+    @Bean
+    public Binding partidaResultadoDlqBinding() {
+        return BindingBuilder
+                .bind(partidaResultadoDlq())
+                .to(dlxExchange())
+                .with(PARTIDA_RESULTADO_DLQ);
     }
 
     @Bean
@@ -64,18 +120,24 @@ public class RabbitConfig {
 
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
-
-        RabbitTemplate template = new RabbitTemplate(connectionFactory);
-        template.setMessageConverter(jsonMessageConverter());
-        template.setRetryTemplate(retryTemplate());
-        return template;
+        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+        rabbitTemplate.setMessageConverter(jsonMessageConverter());
+        
+        // Habilita confirmação de publicação
+        rabbitTemplate.setConfirmCallback((correlation, ack, reason) -> {
+            if (!ack) {
+                System.out.println("Falha ao publicar mensagem: " + reason);
+            }
+        });
+        
+        rabbitTemplate.setRetryTemplate(retryTemplate());
+        return rabbitTemplate;
     }
 
     @Bean
     public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(
             ConnectionFactory connectionFactory) {
         SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
-
         factory.setConnectionFactory(connectionFactory);
         factory.setMessageConverter(jsonMessageConverter());
         factory.setDefaultRequeueRejected(false);

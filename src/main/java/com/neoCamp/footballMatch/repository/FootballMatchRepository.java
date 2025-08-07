@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface FootballMatchRepository extends JpaRepository<FootballMatch, UUID> {
-    Page<FootballMatch> findByHomeClubIdOrClubVisitorId(Long homeClubId, Long clubVisitorId, Pageable pageable);
+    Page<FootballMatch> findByHomeClubIdOrClubVisitorId(UUID homeClubId, UUID clubVisitorId, Pageable pageable);
     @Query("""
 SELECT new com.neoCamp.footballMatch.dto.RankingDTO(
     p.homeClub.id,
@@ -58,7 +58,7 @@ SELECT new com.neoCamp.footballMatch.dto.RetrospectoDTO(
 FROM FootballMatch p
 WHERE p.homeClub.id = :clubeId OR p.clubVisitor.id = :clubeId
 """)
-    RetrospectoDTO retrospectoGeral(@Param("clubeId") Long clubeId);
+    RetrospectoDTO retrospectoGeral(@Param("clubeId") UUID clubeId);
 
 //    @Query("""
 //SELECT new com.neoCamp.footballMatch.dto.DirectConfrontationDTO(
@@ -77,7 +77,7 @@ WHERE p.homeClub.id = :clubeId OR p.clubVisitor.id = :clubeId
 //WHERE (p.homeClub.id = :clubeAId AND p.clubVisitor.id = :clubeBId)
 //   OR (p.homeClub.id = :clubeBId AND p.clubVisitor.id = :clubeAId)
 //""")
-//    DirectConfrontationDTO confrontoDireto(@Param("clubeA") Long clubeA, @Param("clubeB") Long clubeB);
+//    DirectConfrontationDTO confrontoDireto(@Param("clubeA") UUID clubeA, @Param("clubeB") UUID clubeB);
 
 
 }

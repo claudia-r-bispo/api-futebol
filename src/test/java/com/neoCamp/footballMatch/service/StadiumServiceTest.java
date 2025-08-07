@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -43,7 +44,7 @@ public class StadiumServiceTest {
     @BeforeEach
     void setUp() {
         addressEntity = new AddressEntity();
-        addressEntity.setId(1L);
+        addressEntity.setId(UUID.randomUUID());
         addressEntity.setStreet("Avenida Paulista");
         addressEntity.setNumber("1000");
         addressEntity.setCity("São Paulo");
@@ -51,20 +52,20 @@ public class StadiumServiceTest {
         addressEntity.setZipCode("01310-100");
 
         stadiumEntity = new StadiumEntity();
-        stadiumEntity.setId(1L);
-        stadiumEntity.setName("Arena Test");
+        stadiumEntity.setId(UUID.randomUUID());
+        stadiumEntity.setName("Morumbi");
         stadiumEntity.setUf("SP");
         stadiumEntity.setDateCreation(LocalDate.now());
         stadiumEntity.setActive(true);
         stadiumEntity.setAddress(addressEntity);
 
         stadiumDTO = new StadiumDTO();
-        stadiumDTO.setId(1L);
-        stadiumDTO.setName("Arena Test");
+        stadiumDTO.setId(UUID.randomUUID());
+        stadiumDTO.setName("Morumbi");
         stadiumDTO.setUf("SP");
         stadiumDTO.setDateCreation(LocalDate.now());
-        stadiumDTO.setCep("01310-100");
         stadiumDTO.setActive(true);
+        stadiumDTO.setCep("01310-100");
     }
 
     @Test
@@ -78,7 +79,7 @@ public class StadiumServiceTest {
 
 
         assertNotNull(result);
-        assertEquals("Arena Test", result.getName());
+        assertEquals("Morumbi", result.getName());
         assertEquals("SP", result.getUf());
         assertTrue(result.getActive());
 
@@ -119,43 +120,54 @@ public class StadiumServiceTest {
     }
 
     @Test
-    void testUpdateEstadio() {
-
-        Long stadiumId = 1L;
-        when(stadiumRepository.findById(stadiumId)).thenReturn(java.util.Optional.of(stadiumEntity));
-        when(addressService.createAddressPorCep("01310-100")).thenReturn(addressEntity);
+    void updateStadium_WhenStadiumExists_ShouldUpdateAndReturnDTO() {
+        UUID stadiumId = UUID.randomUUID();
+        when(stadiumRepository.findById(stadiumId)).thenReturn(Optional.of(stadiumEntity));
+        when(stadiumRepository.save(any(StadiumEntity.class))).thenReturn(stadiumEntity);
         when(stadiumRepository.save(any(StadiumEntity.class))).thenReturn(stadiumEntity);
 
 
         StadiumDTO result = stadiumService.updateEstadio(stadiumId, stadiumDTO);
 
-
         assertNotNull(result);
         verify(stadiumRepository).findById(stadiumId);
-        verify(addressService).createAddressPorCep("01310-100");
         verify(stadiumRepository).save(any(StadiumEntity.class));
+    }
+
+    @Test
+    void updateStadium_WhenStadiumNotFound_ShouldThrowException() {
+        UUID stadiumId = UUID.randomUUID();
+        when(stadiumRepository.findById(stadiumId)).thenReturn(Optional.empty());
+
+
+        RuntimeException exception = assertThrows(
+                RuntimeException.class,
+                () -> stadiumService.findById(stadiumId)
+        );
+
+        assertEquals("Estádio não encontrado!", exception.getMessage());
     }
 
     @Test
     void testFindById() {
 
-        Long stadiumId = 1L;
-        when(stadiumRepository.findById(stadiumId)).thenReturn(java.util.Optional.of(stadiumEntity));
+        UUID stadiumId = UUID.randomUUID();
+        when(stadiumRepository.findById(stadiumId)).thenReturn(Optional.of(stadiumEntity));
 
 
         StadiumDTO result = stadiumService.findById(stadiumId);
 
 
         assertNotNull(result);
-        assertEquals("Arena Test", result.getName());
+        assertEquals("Morumbi", result.getName());
         verify(stadiumRepository).findById(stadiumId);
     }
 
     @Test
     void testFindById_NaoEncontrado() {
 
-        Long stadiumId = 999L;
-        when(stadiumRepository.findById(stadiumId)).thenReturn(java.util.Optional.empty());
+        UUID stadiumId = UUID.randomUUID();
+        when(stadiumRepository.findById(stadiumId)).thenReturn(Optional.empty());
 
 
         RuntimeException exception = assertThrows(

@@ -30,10 +30,7 @@ public class StadiumMapper {
         }
 
         StadiumDTO stadiumDTO = new StadiumDTO();
-        // Convertendo UUID para Long (usando o hash do UUID)
-        stadiumDTO.setId(stadiumEntity.getId() != null ?
-                (long) stadiumEntity.getId().hashCode() : null);
-
+        stadiumDTO.setId(stadiumEntity.getId());
         stadiumDTO.setName(stadiumEntity.getName());
         stadiumDTO.setUf(stadiumEntity.getUf());
         stadiumDTO.setDateCreation(stadiumEntity.getDateCreation());
