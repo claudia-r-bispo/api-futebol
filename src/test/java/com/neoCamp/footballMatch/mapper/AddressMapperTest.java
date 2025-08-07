@@ -8,28 +8,36 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 
 import java.time.LocalDate;
-
+import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("AddressMapper Tests")
 class AddressMapperTest {
-
+    private UUID testId1;
+    private UUID testId2;
+    private UUID testStadiumId1;
+    
     private AddressDTO addressDTO;
     private AddressEntity addressEntity;
 
     @BeforeEach
     void setUp() {
+        // Initialize test UUIDs
+        testId1 = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
+        testId2 = UUID.fromString("223e4567-e89b-12d3-a456-426614174001");
+        testStadiumId1 = UUID.fromString("323e4567-e89b-12d3-a456-426614174002");
 
+        // Setup DTO
         addressDTO = new AddressDTO();
-        addressDTO.setId(1L);
+        addressDTO.setId(testId1);
         addressDTO.setLogradouro("Avenida Paulista");
         addressDTO.setCidade("São Paulo");
         addressDTO.setEstado("SP");
         addressDTO.setCep("01310-100");
 
-        AddressEntity// Setup
+        // Setup Entity
         addressEntity = new AddressEntity();
-        addressEntity.setId(1L);
+        addressEntity.setId(testId1);
         addressEntity.setStreet("Avenida Paulista");
         addressEntity.setCity("São Paulo");
         addressEntity.setState("SP");
@@ -242,9 +250,8 @@ class AddressMapperTest {
     @Test
     @DisplayName("Deve ignorar relacionamento Stadium no mapeamento")
     void testToEntity_IgnoresStadiumRelationship() {
-
         StadiumEntity stadium = new StadiumEntity();
-        stadium.setId(1L);
+        stadium.setId(testStadiumId1);
         stadium.setName("Arena Test");
 
         addressEntity.setStadium(stadium);
@@ -286,15 +293,21 @@ class AddressMapperTest {
     }
 
     @Test
-    @DisplayName("Deve lidar com IDs de diferentes tipos")
+    @DisplayName("Deve lidar com diferentes UUIDs")
     void testDifferentIdTypes() {
+        UUID[] uuids = {
+            UUID.fromString("00000000-0000-0000-0000-000000000000"),
+            UUID.fromString("11111111-1111-1111-1111-111111111111"),
+            UUID.fromString("22222222-2222-2222-2222-222222222222"),
+            UUID.fromString("ffffffff-ffff-ffff-ffff-ffffffffffff"),
+            testId1,
+            testId2
+        };
 
-        Long[] ids = {1L, 0L, 999L, Long.MAX_VALUE, Long.MIN_VALUE};
-
-        for (Long id : ids) {
+        for (UUID id : uuids) {
             addressDTO.setId(id);
             AddressEntity result = AddressMapper.toEntity(addressDTO);
-            assertEquals(id, result.getId());
+            assertEquals(id, result.getId(), "O ID deve ser o mesmo após o mapeamento");
         }
     }
 
@@ -339,19 +352,17 @@ class AddressMapperTest {
     @Test
     @DisplayName("Deve funcionar com dados reais de endereços brasileiros")
     void testRealBrazilianAddresses() {
-
         Object[][] realAddresses = {
-                {1L, "Avenida Paulista", "São Paulo", "SP", "01310-100"},
-                {2L, "Rua Oscar Freire", "São Paulo", "SP", "01426-001"},
-                {3L, "Avenida Atlântica", "Rio de Janeiro", "RJ", "22070-000"},
-                {4L, "Rua da Assembleia", "Rio de Janeiro", "RJ", "20011-000"},
-                {5L, "Avenida Boa Viagem", "Recife", "PE", "51030-000"}
+                {UUID.fromString("10000000-0000-0000-0000-000000000001"), "Avenida Paulista", "São Paulo", "SP", "01310-100"},
+                {UUID.fromString("20000000-0000-0000-0000-000000000002"), "Rua Oscar Freire", "São Paulo", "SP", "01426-001"},
+                {UUID.fromString("30000000-0000-0000-0000-000000000003"), "Avenida Atlântica", "Rio de Janeiro", "RJ", "22070-000"},
+                {UUID.fromString("40000000-0000-0000-0000-000000000004"), "Rua da Assembleia", "Rio de Janeiro", "RJ", "20011-000"},
+                {UUID.fromString("50000000-0000-0000-0000-000000000005"), "Avenida Boa Viagem", "Recife", "PE", "51030-000"}
         };
 
         for (Object[] addressData : realAddresses) {
-
             AddressDTO dto = new AddressDTO();
-            dto.setId((Long) addressData[0]);
+            dto.setId((UUID) addressData[0]);
             dto.setLogradouro((String) addressData[1]);
             dto.setCidade((String) addressData[2]);
             dto.setEstado((String) addressData[3]);

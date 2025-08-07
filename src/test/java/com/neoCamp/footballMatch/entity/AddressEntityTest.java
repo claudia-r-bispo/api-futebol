@@ -180,8 +180,11 @@ class AddressEntityTest {
     @DisplayName("Deve funcionar equals e hashCode corretamente")
     void testEqualsAndHashCode() {
         // Arrange
+        UUID id1 = UUID.randomUUID();
+        UUID id2 = UUID.randomUUID();
+        
         AddressEntity address1 = new AddressEntity(
-                UUID.randomUUID(),
+                id1,
                 "Avenida Paulista",
                 "123",
                 "São Paulo",
@@ -191,7 +194,7 @@ class AddressEntityTest {
         );
 
         AddressEntity address2 = new AddressEntity(
-                1L,
+                id1, // Same ID as address1
                 "Avenida Paulista",
                 "123",
                 "São Paulo",
@@ -201,7 +204,7 @@ class AddressEntityTest {
         );
 
         AddressEntity address3 = new AddressEntity(
-                2L,
+                id2, // Different ID
                 "Rua Augusta",
                 "456",
                 "São Paulo",
@@ -210,18 +213,19 @@ class AddressEntityTest {
                 stadiumEntity
         );
 
-
-        assertEquals(address1, address2);
-        assertNotEquals(address1, address3);
-        assertEquals(address1.hashCode(), address2.hashCode());
-        assertNotEquals(address1.hashCode(), address3.hashCode());
+        // Assert
+        assertEquals(address1, address2, "Addresses with same ID should be equal");
+        assertNotEquals(address1, address3, "Addresses with different IDs should not be equal");
+        assertEquals(address1.hashCode(), address2.hashCode(), "Hash codes should be equal for equal objects");
+        assertNotEquals(address1.hashCode(), address3.hashCode(), "Hash codes should be different for different objects");
     }
 
     @Test
     @DisplayName("Deve funcionar toString corretamente")
     void testToString() {
         // Arrange
-        addressEntity.setId(1L);
+        UUID testId = UUID.randomUUID();
+        addressEntity.setId(testId);
         addressEntity.setStreet("Avenida Paulista");
         addressEntity.setNumber("123");
         addressEntity.setCity("São Paulo");
@@ -300,7 +304,7 @@ class AddressEntityTest {
 
 
         AddressEntity viaCepAddress = new AddressEntity(
-                1L,
+                UUID.randomUUID(),
                 street,
                 "123",
                 city,
