@@ -1,0 +1,164 @@
+package com.neoCamp.footballMatch.config;
+
+import org.springframework.amqp.core.*;
+import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.amqp.support.converter.MessageConverter;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.retry.backoff.ExponentialBackOffPolicy;
+import org.springframework.retry.policy.SimpleRetryPolicy;
+import org.springframework.retry.support.RetryTemplate;
+
+import static org.springframework.amqp.core.QueueBuilder.durable;
+
+@Configuration
+public class RabbitConfig {
+
+    // Filas principais
+    public static final String PARTIDA_INFORMACOES_QUEUE = "partida.informacoes";
+    public static final String PARTIDA_RESULTADO_QUEUE = "partida.resultado";
+    
+    // DLQs
+    public static final String PARTIDA_INFORMACOES_DLQ = "partida.informacoes.dlq";
+    public static final String PARTIDA_RESULTADO_DLQ = "partida.resultado.dlq";
+    
+    // Exchange
+    public static final String PARTIDA_EXCHANGE = "partida.exchange";
+    public static final String DLX_EXCHANGE = "dlx.exchange";
+    
+    // Routing Keys
+    public static final String PARTIDA_INFORMACOES_ROUTING_KEY = "partida.informacoes";
+    public static final String PARTIDA_RESULTADO_ROUTING_KEY = "partida.resultado";
+
+    @Bean
+    public TopicExchange partidaExchange() {
+        return ExchangeBuilder.topicExchange(PARTIDA_EXCHANGE)
+                .durable(true)
+                .build();
+    }
+
+    @Bean
+    public DirectExchange dlxExchange() {
+        return ExchangeBuilder.directExchange(DLX_EXCHANGE)
+                .durable(true)
+                .build();
+    }
+
+    // Configuração da fila de informações com DLQ e TTL
+    @Bean
+    public Queue partidaInformacoesQueue() {
+        return QueueBuilder.durable(PARTIDA_INFORMACOES_QUEUE)
+                .withArgument("x-dead-letter-exchange", DLX_EXCHANGE)
+                .withArgument("x-dead-letter-routing-key", PARTIDA_INFORMACOES_DLQ)
+                .withArgument("x-message-ttl", 86400000) // 24 horas em milissegundos
+                .build();
+    }
+
+    @Bean
+    public Queue partidaInformacoesDlq() {
+        return QueueBuilder.durable(PARTIDA_INFORMACOES_DLQ)
+                .withArgument("x-message-ttl", 172800000) // 48 horas em milissegundos
+                .build();
+    }
+
+    @Bean
+    public Binding partidaInformacoesBinding() {
+        return BindingBuilder
+                .bind(partidaInformacoesQueue())
+                .to(partidaExchange())
+                .with(PARTIDA_INFORMACOES_ROUTING_KEY);
+    }
+
+    @Bean
+    public Binding partidaInformacoesDlqBinding() {
+        return BindingBuilder
+                .bind(partidaInformacoesDlq())
+                .to(dlxExchange())
+                .with(PARTIDA_INFORMACOES_DLQ);
+    }
+
+    // Configuração da fila de resultado com DLQ e TTL
+    @Bean
+    public Queue partidaResultadoQueue() {
+        return QueueBuilder.durable(PARTIDA_RESULTADO_QUEUE)
+                .withArgument("x-dead-letter-exchange", DLX_EXCHANGE)
+                .withArgument("x-dead-letter-routing-key", PARTIDA_RESULTADO_DLQ)
+                .withArgument("x-message-ttl", 86400000) // 24 horas em milissegundos
+                .build();
+    }
+
+    @Bean
+    public Queue partidaResultadoDlq() {
+        return QueueBuilder.durable(PARTIDA_RESULTADO_DLQ)
+                .withArgument("x-message-ttl", 172800000) // 48 horas em milissegundos
+                .build();
+    }
+
+    @Bean
+    public Binding partidaResultadoBinding() {
+        return BindingBuilder
+                .bind(partidaResultadoQueue())
+                .to(partidaExchange())
+                .with(PARTIDA_RESULTADO_ROUTING_KEY);
+    }
+
+    @Bean
+    public Binding partidaResultadoDlqBinding() {
+        return BindingBuilder
+                .bind(partidaResultadoDlq())
+                .to(dlxExchange())
+                .with(PARTIDA_RESULTADO_DLQ);
+    }
+
+    @Bean
+    public MessageConverter jsonMessageConverter() {
+        return new Jackson2JsonMessageConverter();
+    }
+
+    @Bean
+    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
+        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+        rabbitTemplate.setMessageConverter(jsonMessageConverter());
+        
+        // Habilita confirmação de publicação
+        rabbitTemplate.setConfirmCallback((correlation, ack, reason) -> {
+            if (!ack) {
+                System.out.println("Falha ao publicar mensagem: " + reason);
+            }
+        });
+        
+        rabbitTemplate.setRetryTemplate(retryTemplate());
+        return rabbitTemplate;
+    }
+
+    @Bean
+    public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(
+            ConnectionFactory connectionFactory) {
+        SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
+        factory.setConnectionFactory(connectionFactory);
+        factory.setMessageConverter(jsonMessageConverter());
+        factory.setDefaultRequeueRejected(false);
+        factory.setAcknowledgeMode(AcknowledgeMode.AUTO);
+        return factory;
+    }
+
+    @Bean
+    public RetryTemplate retryTemplate() {
+        RetryTemplate retryTemplate = new RetryTemplate();
+
+        SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy();
+        retryPolicy.setMaxAttempts(3);
+        retryTemplate.setRetryPolicy(retryPolicy);
+
+        ExponentialBackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
+        backOffPolicy.setInitialInterval(1000); // 1 segundo
+        backOffPolicy.setMultiplier(2.0); // Dobra o tempo de espera a cada tentativa
+        backOffPolicy.setMaxInterval(10000); // 10 segundos máximo
+        retryTemplate.setBackOffPolicy(backOffPolicy);
+
+        return retryTemplate;
+    }
+}
